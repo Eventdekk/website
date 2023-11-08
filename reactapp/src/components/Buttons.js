@@ -1,5 +1,5 @@
 import '../App.css'
-import Button from './Button.js'
+import Button from './utils/Button.js'
 
 export default function Buttons() {
     return (
