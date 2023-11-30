@@ -7,10 +7,10 @@ class CounterModel(models.Model):
         return "Counter"
 
 class UserModel(models.Model):
-    discord = models.CharField()
+    discord = models.CharField(max_length=100)
 
 class GroupModel(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=50)
     owner_id = models.IntegerField()
 
 class GroupMembersModel(models.Model):

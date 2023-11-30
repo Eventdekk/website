@@ -31,5 +31,23 @@ class CounterViewSet(viewsets.ModelViewSet):
         
         return Response({"message": "Data updated successfully"})
 
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = UserModel.objects.all()
 
+class GroupViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = GroupModel.objects.all()
+
+class GroupMembersViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = GroupMembersModel.objects.all()
+
+class EventViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = EventModel.objects.all()
+
+class EventJoiningViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = EventJoiningModel.objects.all()
 
