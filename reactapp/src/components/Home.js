@@ -1,11 +1,20 @@
-import '../App.css'
-import Page from './utils/Page.js'
+import Page from "./site/Page.js";
+import Event from "./utils/Event.js";
+import { Text, Title } from "./utils/Text.js";
 
 export default function Home() {
-  
-    return (
-        <Page>
-            <h1 class="text-center text-2xl font-bold">This is the home page</h1>
-        </Page>
-    );
-  }
+  const myArray = Array.from({ length: 9 }, (_, index) => index);
+
+  return (
+    <Page>
+      <Title style="hidden font-bold text-center text-2xl">
+        Upcoming Events:
+      </Title>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 min-h-screen items-center justify-center">
+        {myArray.map((item, index) => (
+          <Event></Event>
+        ))}
+      </div>
+    </Page>
+  );
+}

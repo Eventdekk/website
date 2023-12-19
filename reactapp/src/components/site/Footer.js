@@ -1,10 +1,10 @@
 import '../../App.css'
 import { useEffect, useState } from 'react';
 
-export default function Header({children}) {
+export default function Footer({children}) {
     return (
         <>
-            <h2>This is the header!</h2>
+             <h2>Footer</h2>
         </>
     );
   }

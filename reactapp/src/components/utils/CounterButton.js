@@ -15,7 +15,7 @@ export default function Button({message, style = "", children}) {
 
     //Long polling data
     function pollCount() {
-        fetch('/api/counter')
+        fetch('/api/counter/')
             .then(response => response.json())
             .then(data => {
                 setTimeout(pollCount, 1000)
