@@ -12,7 +12,7 @@ export function Popup({ children, style, togglePopup, isPopupOpen }) {
         onClick={togglePopup}
       ></div>
       <div
-        className={`fixed top-16 bottom-0 inset-x-16 z-50 p-4 bg-white dark:bg-midnight2 rounded-t-xl shadow-lg cursor-default ease-out transition-transform duration-300 ${
+        className={`fixed top-16 bottom-0 inset-x-16 z-50 p-4 bg-white dark:bg-midnight2 rounded-t-xl shadow-lg cursor-default ease-in-out transition-transform duration-300 ${
           isPopupOpen ? "translate-y-0" : "translate-y-full"
         }`}
       >
