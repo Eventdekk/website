@@ -1,7 +1,9 @@
-export function Text({ children, style }) {
+export function Text({ children, style, onClick }) {
   return (
     <>
-      <div class={style + " text-black dark:text-slate-100 "}>{children}</div>
+      <div onClick={onClick} class={style + " text-black dark:text-slate-100 "}>
+        {children}
+      </div>
     </>
   );
 }
@@ -42,12 +44,13 @@ export function ClippedText({ children, style }) {
   );
 }
 
-export function ClickableText({ children, style }) {
+export function ClickableText({ children, style, onClick }) {
   return (
     <Text
       style={
         style + " hover:text-primary dark:hover:text-secondary duration-300"
       }
+      onClick={onClick}
     >
       {children}
     </Text>
