@@ -1,5 +1,5 @@
 import { Text, TruncatedText, SecondaryText } from "./Text.js";
-import Profile from "./Profile.js";
+import { ProfileIcon } from "./Profile.js";
 import Calender from "./Calender.js";
 import Banner from "./Banner.js";
 
@@ -10,7 +10,7 @@ export default function Event({}) {
         <div class="cursor-pointer rounded-xl bg-white dark:bg-midnight p-2 hover:shadow-lg shadow-slate-100 dark:shadow-midnight2 duration-200 hover:bg-slate-100 dark:hover:bg-midnight2">
           <div class="flex">
             <div class="mr-2">
-              <Profile style="h-8"></Profile>
+              <ProfileIcon style="h-8"></ProfileIcon>
             </div>
             <div class="mb-1 flex items-center">
               <SecondaryText>Qatari Virtual</SecondaryText>

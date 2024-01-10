@@ -12,7 +12,7 @@ export default function Home() {
       </Title>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 min-h-screen items-center justify-center">
         {myArray.map((item, index) => (
-          <Event></Event>
+          <Event key={index}></Event>
         ))}
       </div>
     </Page>

@@ -1,4 +1,3 @@
-import "../App.css";
 import CounterButton from "./utils/CounterButton.js";
 
 export default function Buttons() {
