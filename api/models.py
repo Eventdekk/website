@@ -1,5 +1,8 @@
 from django.db import models
 
+from django.utils import timezone
+
+
 class CounterModel(models.Model):
     count = models.IntegerField(default=0)
 
@@ -24,6 +27,7 @@ class EventModel(models.Model):
     description = models.TextField()
     ifc_link = models.URLField()
     thumbnail = models.ImageField()
+    date = models.DateField(default=timezone.now().today)
 
 class EventJoiningModel(models.Model):
     event_id = models.BigIntegerField()

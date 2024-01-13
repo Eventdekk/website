@@ -36,18 +36,18 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = UserModel.objects.all()
 
 class GroupViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
+    serializer_class = GroupSerializer
     queryset = GroupModel.objects.all()
 
 class GroupMembersViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
+    serializer_class = GroupMembersSerializer
     queryset = GroupMembersModel.objects.all()
 
 class EventViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
+    serializer_class = EventSerializer
     queryset = EventModel.objects.all()
 
 class EventJoiningViewSet(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
+    serializer_class = EventJoiningSerializer
     queryset = EventJoiningModel.objects.all()
 

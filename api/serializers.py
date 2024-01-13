@@ -25,7 +25,7 @@ class GroupMembersSerializer(serializers.HyperlinkedModelSerializer):
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EventModel
-        fields = ('id', 'group_id', 'name', 'description', 'ifc_link', 'thumbnail')
+        fields = ('id', 'group_id', 'name', 'description', 'ifc_link', 'thumbnail', 'date')
 
 class EventJoiningSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

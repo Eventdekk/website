@@ -5,9 +5,20 @@ import Calender from "./Calender.js";
 import Banner from "./Banner.js";
 import { Popup } from "./Popup.js";
 
-export default function Event({}) {
+//"https://images-ext-2.discordapp.net/external/A6xyp9sMfTBBCTSwsgbUa5dFDKu3cEmWMp_Tek68tE4/https/global.discourse-cdn.com/infiniteflight/optimized/4X/0/a/6/0a646d555e58ed792705ee22089c894854b812ab_2_1024x576.jpeg?format=webp&width=1014&height=570"
+
+export default function Event({ data }) {
   const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const dateObject = new Date(data.date);
+
+  const options = { month: "short", day: "numeric" };
+  const formatted = new Intl.DateTimeFormat("en-US", options).format(
+    dateObject
+  );
+
+  const [month, day] = formatted.split(" ");
 
   const toggleProfilePopup = (event) => {
     event.stopPropagation();
@@ -67,12 +78,13 @@ export default function Event({}) {
           </Popup>
 
           <TruncatedText style="dark:text-slate-100 mb-2 text-lg font-semibold	">
-            Christmas In New York! By Qatari Virtual
+            {data.name}
           </TruncatedText>
 
           <div class="relative">
-            <Banner src="https://images-ext-2.discordapp.net/external/A6xyp9sMfTBBCTSwsgbUa5dFDKu3cEmWMp_Tek68tE4/https/global.discourse-cdn.com/infiniteflight/optimized/4X/0/a/6/0a646d555e58ed792705ee22089c894854b812ab_2_1024x576.jpeg?format=webp&width=1014&height=570"></Banner>
-            <Calender style="absolute" month="dec" day="23"></Calender>
+            <Banner src={data.thumbnail}></Banner>
+
+            <Calender style="absolute" month={month} day={day}></Calender>
           </div>
         </div>
       </div>

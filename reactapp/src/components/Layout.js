@@ -13,7 +13,7 @@ function Layout() {
     // Add additional logic for handling search here
   };
   return (
-    <div class="absolute">
+    <div class="absolute w-full">
       {/* Navigation for mobile */}
       <nav className="md:hidden fixed bottom-0 left-0 w-full overflow-hidden bg-white dark:bg-midnight">
         <div class="sticky bottom-0 left-0 z-50 w-full h-16 border-t border-gray-200 dark:bg-midnight dark:border-gray-600">
