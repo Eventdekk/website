@@ -1,23 +1,26 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home.js";
-import Buttons from "./components/Buttons.js";
+import CalenderPage from "./components/CalenderPage.js";
 import Layout from "./components/Layout.js";
 import { ThemeProvider } from "./components/site/ThemeContext.js";
+import { PopupProvider } from "./components/site/PopupContext.js";
 
 function App() {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="buttons" element={<Buttons />} />
-            <Route path="*" element={<NoPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <PopupProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="calender" element={<CalenderPage />} />
+              <Route path="*" element={<NoPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </PopupProvider>
   );
 }
 

@@ -1,19 +1,33 @@
 export function Text({ children, style, onClick }) {
   return (
-    <>
-      <div onClick={onClick} class={style + " text-black dark:text-slate-100 "}>
-        {children}
-      </div>
-    </>
+    <div
+      onClick={onClick}
+      className={style + " text-black dark:text-slate-100"}
+    >
+      {children}
+    </div>
   );
 }
 
 export function SecondaryText({ children, style }) {
   return (
     <>
-      <div class={style + " text-slate-900 dark:text-slate-300"}>
+      <div className={style + " text-slate-900 dark:text-slate-300"}>
         {children}
       </div>
+    </>
+  );
+}
+
+export function InvertedText({ children, style, onClick }) {
+  return (
+    <>
+      <Text
+        onClick={onClick}
+        style={style + " text-slate-100 dark:text-black "}
+      >
+        {children}
+      </Text>
     </>
   );
 }
@@ -48,7 +62,7 @@ export function ClickableText({ children, style, onClick }) {
   return (
     <Text
       style={
-        style + " hover:text-primary dark:hover:text-secondary duration-300"
+        style + " hover:text-primary hover:dark:text-secondary duration-300"
       }
       onClick={onClick}
     >

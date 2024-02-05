@@ -19,7 +19,7 @@ function Layout() {
         <div class="sticky bottom-0 left-0 z-50 w-full h-16 border-t border-gray-200 dark:bg-midnight dark:border-gray-600">
           <div class="grid h-full max-w-lg grid-cols-3 mx-auto">
             <Link
-              to="/buttons"
+              to="/calender"
               class="inline-flex flex-col items-center justify-center font-medium px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
             >
               <svg
@@ -31,7 +31,7 @@ function Layout() {
               >
                 <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
               </svg>
-              <Text style="dark:hover:text-secondary">Buttons</Text>
+              <Text style="dark:hover:text-secondary">Calender</Text>
             </Link>
             <Link
               to="/"
@@ -80,7 +80,7 @@ function Layout() {
               </Link>
             </li>
             <li class="mr-8 pb-1">
-              <Link to="/buttons">
+              <Link to="/calender">
                 <ClickableText>Calender</ClickableText>
               </Link>
             </li>

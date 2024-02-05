@@ -18,8 +18,8 @@ export default function Home() {
         Upcoming Events:
       </Title>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 min-h-screen items-center justify-center">
-        {data.map((item, index) => (
-          <Event key={index} data={item}></Event>
+        {data.map((event, index) => (
+          <Event key={index} data={event}></Event>
         ))}
       </div>
     </Page>
