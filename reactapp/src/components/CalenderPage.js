@@ -3,10 +3,26 @@ import React, { useState } from "react";
 import { MonthlyView, WeeklyView } from "./utils/Calender.js";
 import Page from "./site/Page.js";
 import { ClickableText } from "./utils/Text.js";
+import { useQuery } from "react-query";
+import { fetchEvents } from "./query/query.js";
+import { Map } from "./utils/Map.js";
 
 export default function CalenderPage() {
   const [view, setView] = useState("monthly");
   const [date, setDate] = useState(new Date());
+  const { data, isLoading, error } = useQuery("events", fetchEvents);
+
+  const airports = [
+    { id: 1, name: "Airport A", latitude: 43.7128, longitude: -74.006 },
+    { id: 2, name: "Airport B", latitude: 38.0522, longitude: -118.2437 },
+    { id: 3, name: "Airport C", latitude: 43.8781, longitude: -87.6298 },
+  ];
+
+  const planes = [
+    { id: 1, name: "Plane 1", latitude: 40.9128, longitude: -74.006 },
+    { id: 2, name: "Plane 2", latitude: 34.2522, longitude: -118.2437 },
+    { id: 3, name: "Plane 3", latitude: 41.9781, longitude: -87.6298 },
+  ];
 
   const onDateChange = (date) => {
     setDate(date);
@@ -20,12 +36,19 @@ export default function CalenderPage() {
     setView("weekly");
   };
 
-  const events = [
-    { date: new Date(2024, 1, 5), title: "Event 1" },
-    { date: new Date(2024, 1, 15), title: "Event 2" },
-    { date: new Date(2024, 1, 23), title: "Event 3" },
-    // Add more events as needed
-  ];
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  function convertDatesToObjects(events) {
+    return events.map((event) => {
+      return {
+        ...event,
+        date: new Date(event.date),
+      };
+    });
+  }
+
+  const modifiedEvents = convertDatesToObjects(data);
 
   return (
     <Page>
@@ -55,10 +78,19 @@ export default function CalenderPage() {
       </div>
 
       {view === "monthly" ? (
-        <MonthlyView events={events} date={date} onDateChange={onDateChange} />
+        <MonthlyView
+          events={modifiedEvents}
+          date={date}
+          onDateChange={onDateChange}
+        />
       ) : (
-        <WeeklyView events={events} date={date} onDateChange={onDateChange} />
+        <WeeklyView
+          events={modifiedEvents}
+          date={date}
+          onDateChange={onDateChange}
+        />
       )}
+      <Map planes={planes} airports={airports} />
     </Page>
   );
 }

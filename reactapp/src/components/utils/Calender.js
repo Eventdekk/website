@@ -87,6 +87,21 @@ export function MonthlyView({ children, events, date, onDateChange }) {
     return rows;
   };
 
+  const getEventsForDay = (events, day) => {
+    const dayYear = day.getFullYear();
+    const dayMonth = day.getMonth();
+    const dayDate = day.getDate();
+
+    return events.filter((event) => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getFullYear() === dayYear &&
+        eventDate.getMonth() === dayMonth &&
+        eventDate.getDate() === dayDate
+      );
+    });
+  };
+
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
@@ -133,13 +148,10 @@ export function MonthlyView({ children, events, date, onDateChange }) {
                   }}
                 >
                   <div className="absolute top-0 p-0.5 w-full">
-                    {events.map((event) =>
-                      event &&
-                      event.date &&
-                      event.date.getTime() === date.getTime() ? (
-                        <EventHolder date={date} event={event}></EventHolder>
-                      ) : null
-                    )}
+                    {Array.isArray(events) &&
+                      getEventsForDay(events, date).map((event) => (
+                        <EventHolder key={event.name} event={event} />
+                      ))}
                   </div>
                   <div class="absolute bottom-0 right-0 px-1">
                     <Text style="font-semibold">
@@ -233,7 +245,7 @@ export function WeeklyView({ events, date, onDateChange }) {
                   .toLocaleString("en-US", { minimumIntegerDigits: 2 })}
               </Text>
               <div
-                className={`p-2 h-auto border-y border-r border-gray-300 dark:border-gray-800 ${
+                className={`p-0.5 pt-1 h-auto border-y border-r border-gray-300 dark:border-gray-800 ${
                   index == 0 ? "border-l" : null
                 }`}
                 style={{
@@ -242,7 +254,7 @@ export function WeeklyView({ events, date, onDateChange }) {
               >
                 {Array.isArray(events) &&
                   getEventsForDay(events, currentDay).map((event) => (
-                    <EventHolder key={event.title} event={event} />
+                    <EventHolder key={event.name} event={event} />
                   ))}
               </div>
             </div>
@@ -258,10 +270,10 @@ function EventHolder({ date, event }) {
     <>
       <TruncatedText>
         <InvertedText
-          style="text-sm bg-primary dark:bg-secondary p-0.5 pl-1 mb-px rounded-md"
-          key={event.title}
+          style="text-sm bg-primary dark:bg-secondary p-0.5 pl-1 mb-1 rounded-md"
+          key={event.name}
         >
-          {event.title}
+          {event.name}
         </InvertedText>
       </TruncatedText>
     </>

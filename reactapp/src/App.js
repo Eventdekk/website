@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home.js";
 import CalenderPage from "./components/CalenderPage.js";
+import { AdminPage } from "./components/AdminPage.js";
 import Layout from "./components/Layout.js";
 import { ThemeProvider } from "./components/site/ThemeContext.js";
 import { PopupProvider } from "./components/site/PopupContext.js";
@@ -15,6 +16,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="calender" element={<CalenderPage />} />
+              <Route path="admin" element={<AdminPage />} />
               <Route path="*" element={<NoPage />} />
             </Route>
           </Routes>

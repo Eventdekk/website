@@ -1,0 +1,5 @@
+import os
+
+DISCORD_CLIENT_ID = os.environ.get('DISCORD_CLIENT_ID')
+DISCORD_CLIENT_SECRET = os.environ.get('DISCORD_CLIENT_SECRET')
+REDIRECT_URI = os.environ.get('REDIRECT_URI')

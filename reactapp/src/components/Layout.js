@@ -85,7 +85,7 @@ function Layout() {
               </Link>
             </li>
             <li class="pb-1">
-              <Link to="/cats">
+              <Link to="/admin">
                 <ClickableText>Login</ClickableText>
               </Link>
             </li>

@@ -20,3 +20,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#https://discord.com/api/oauth2/authorize?client_id=1209503110159147088&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fdiscord%2Fcallback&scope=identify

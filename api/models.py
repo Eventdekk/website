@@ -1,7 +1,6 @@
 from django.db import models
-
 from django.utils import timezone
-
+from django.contrib.auth.models import AbstractUser
 
 class CounterModel(models.Model):
     count = models.IntegerField(default=0)
@@ -10,7 +9,7 @@ class CounterModel(models.Model):
         return "Counter"
 
 class UserModel(models.Model):
-    discord = models.CharField(max_length=100)
+    discord_id = models.IntegerField()
 
 class GroupModel(models.Model):
     name = models.CharField(max_length=50)

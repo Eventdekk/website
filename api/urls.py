@@ -1,5 +1,5 @@
 from django.urls import path, include
-
+from oauth2_provider.views import AuthorizationView, TokenView
 from rest_framework import routers
 
 from .views import *
@@ -15,5 +15,8 @@ router.register(r'eventjoins', EventJoiningViewSet)
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
+    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('auth/discord/', DiscordOAuthView.as_view(), name='discord_oauth'),
+    path('auth/discord/callback/', csrf_exempt(DiscordCallbackView.as_view()), name='discord_callback'),
     path('', include(router.urls))
 ]
