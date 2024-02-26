@@ -13,12 +13,12 @@ from rest_framework.decorators import action
 
 from .serializers import *
 from .models import *
-
-import requests
+from .discord import Discord
 
 import uuid
 
 from config import *
+
 
 class CounterViewSet(viewsets.ModelViewSet):
     queryset = CounterModel.objects.all()
@@ -50,16 +50,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='get_user_id/(?P<uuid_str>[^/.]+)')
     def get_user_id(self, request, uuid_str=None):
-        # Check if the UUID is valid
         try:
-            uuid_obj = uuid.UUID(uuid_str)
+            uuid.UUID(uuid_str)
         except ValueError:
             return Response({'error': 'Invalid UUID'}, status=400)
         
-        # Query the User object based on the UUID
         user = UserModel.objects.get(uuid=uuid_str)
 
-        # Return the User's ID
         return Response({'uuid': user.uuid, 'discord_id': user.discord_id})
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -80,18 +77,7 @@ class EventJoiningViewSet(viewsets.ModelViewSet):
     
 class DiscordOAuthView(View):
     def get(self, request, *args, **kwargs):
-        # Construct Discord authorization URL
-        authorization_base_url = 'https://discord.com/api/oauth2/authorize'
-        client_id = DISCORD_CLIENT_ID
-        redirect_uri = REDIRECT_URI 
-        scope = 'identify'
-        authorization_url = f'{authorization_base_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code&scope={scope}'
-        
-        # Redirect user to Discord authorization URL
-        return redirect(authorization_url)
-
-
-
+        return Discord.authenticate()
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DiscordCallbackView(View):
@@ -100,59 +86,11 @@ class DiscordCallbackView(View):
         if not code:
             return HttpResponseBadRequest('Authorization code missing')
 
-        discord_user_id = self.get_discord_user_id(code)
-
-        print(discord_user_id)
+        discord_user_id = Discord.get_discord_user_id(code)
 
         if not discord_user_id:
             return HttpResponseBadRequest('Failed to retrieve user information from Discord')
         
-        try:
-            user = UserModel.objects.get(discord_id=discord_user_id)
+        return Discord.callback(discord_user_id, code)
             
-            return redirect(f'http://localhost:3000/admin?userId={user.uuid}')
-        except UserModel.DoesNotExist:
-            new_uuid = uuid.uuid4()
-            new_user = UserModel(discord_id=discord_user_id, uuid=new_uuid.hex)
-            new_user.save()
-
-            return redirect(f'http://localhost:3000/admin?userId={new_user.uuid}')
-        
-        return HttpResponse('Authentication successful')
     
-    def get_discord_user_id(self, code):
-        token_url = 'https://discord.com/api/oauth2/token'
-        
-        client_id = DISCORD_CLIENT_ID
-        client_secret = DISCORD_CLIENT_SECRET
-        redirect_uri = REDIRECT_URI
-
-        # Payload for token exchange request
-        payload = {
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'code': code,
-            'grant_type': 'authorization_code',
-            'redirect_uri': redirect_uri
-        }
-
-        try:
-            # Make POST request to exchange authorization code for access token
-            response = requests.post(token_url, data=payload)
-            response.raise_for_status()  # Raise an exception for any HTTP error status codes
-
-            # Parse JSON response
-            token_data = response.json()
-
-            # Extract Discord user ID from token data
-            access_token = token_data['access_token']
-            headers = {'Authorization': f'Bearer {access_token}'}
-            user_response = requests.get('https://discord.com/api/users/@me', headers=headers)
-            user_response.raise_for_status()  # Raise an exception for any HTTP error status codes
-            user_data = user_response.json()
-            discord_id = user_data['id']
-
-            return discord_id
-        except Exception as e:
-            print(f'Error retrieving Discord user ID: {e}')
-            return None
