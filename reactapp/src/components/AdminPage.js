@@ -51,10 +51,12 @@ export function AdminPage() {
     );
   }
   if (error) {
+    setLogged(false);
     return (
       <Page>
         <div class="text-center p-5">
           <Title>User not found!</Title>
+          <DiscordAuthButton></DiscordAuthButton>
         </div>
       </Page>
     );

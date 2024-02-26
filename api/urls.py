@@ -1,5 +1,4 @@
 from django.urls import path, include
-from oauth2_provider.views import AuthorizationView, TokenView
 from rest_framework import routers
 
 from .views import *
