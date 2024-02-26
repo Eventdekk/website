@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, TruncatedText, SecondaryText, ClickableText } from "./Text.js";
 import { ProfilePicture } from "./Profile.js";
-import { CalenderShow } from "./Calender.js";
+import { CalendarShow } from "./Calendar.js";
 import Banner from "./Banner.js";
 import { Popup } from "./Popup.js";
 import { usePopup } from "../site/PopupContext.js";
@@ -69,11 +69,11 @@ export default function Event({ data }) {
           <div class="relative">
             <Banner src={data.thumbnail}></Banner>
 
-            <CalenderShow
+            <CalendarShow
               style="absolute"
               month={month}
               day={day}
-            ></CalenderShow>
+            ></CalendarShow>
           </div>
         </div>
       </div>

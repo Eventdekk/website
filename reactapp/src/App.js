@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home.js";
-import CalenderPage from "./components/CalenderPage.js";
+import CalendarPage from "./components/CalendarPage.js";
 import { AdminPage } from "./components/AdminPage.js";
 import Layout from "./components/Layout.js";
 import { ThemeProvider } from "./components/site/ThemeContext.js";
@@ -15,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="calender" element={<CalenderPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
               <Route path="admin" element={<AdminPage />} />
               <Route path="*" element={<NoPage />} />
             </Route>
