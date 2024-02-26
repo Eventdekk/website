@@ -10,6 +10,7 @@ class CounterModel(models.Model):
 
 class UserModel(models.Model):
     discord_id = models.IntegerField()
+    uuid = models.CharField(max_length=32)
 
 class GroupModel(models.Model):
     name = models.CharField(max_length=50)
