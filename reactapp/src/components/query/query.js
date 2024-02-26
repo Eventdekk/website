@@ -34,7 +34,7 @@ export async function fetchUser(userId) {
   }
 
   try {
-    return await fetchData("/users/" + userId + "/");
+    return await fetchData("/users/get_user_id/" + userId + "/");
   } catch (error) {
     console.log("Error: " + error);
     throw error;
