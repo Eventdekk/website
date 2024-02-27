@@ -10,7 +10,7 @@ class CounterSerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('id', 'discord_id', 'uuid')
+        fields = ('id', 'discord_id', 'uuid', 'refresh_token')
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

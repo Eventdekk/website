@@ -11,7 +11,7 @@ class CounterModel(models.Model):
 class UserModel(models.Model):
     discord_id = models.IntegerField()
     uuid = models.CharField(max_length=32, default="0")
-    refresh_token = models.CharField(max_length=32, defualt="0")
+    refresh_token = models.CharField(max_length=32, default="0")
 
 class GroupModel(models.Model):
     name = models.CharField(max_length=50)
