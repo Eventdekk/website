@@ -6,26 +6,25 @@ from config import *
 from .models import *
 
 class Discord:
-    def __init__(self):
-        self.client_id = DISCORD_CLIENT_ID
-        self.redirect_uri = REDIRECT_URI
-        self.client_secret = DISCORD_CLIENT_SECRET
+    client_id = DISCORD_CLIENT_ID
+    redirect_uri = REDIRECT_URI
+    client_secret = DISCORD_CLIENT_SECRET
 
-    def login_url(self):
+    def login_url():
         authorization_base_url = 'https://discord.com/api/oauth2/authorize'
         scope = 'identify'
-        return f'{authorization_base_url}?client_id={self.client_id}&redirect_uri={self.redirect_uri}&response_type=code&scope={scope}'
+        return f'{authorization_base_url}?client_id={Discord.client_id}&redirect_uri={Discord.redirect_uri}&response_type=code&scope={scope}'
     
-    def get_tokens(self, code):
+    def get_tokens(code):
         token_url = 'https://discord.com/api/oauth2/token'
 
         # Payload for token exchange request
         data = {
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
+            'client_id': Discord.client_id,
+            'client_secret': Discord.client_secret,
             'code': code,
             'grant_type': 'authorization_code',
-            'redirect_uri': self.redirect_uri
+            'redirect_uri': Discord.redirect_uri
         }
 
         headers = {
@@ -44,20 +43,28 @@ class Discord:
             print(f'Error retrieving Discord user ID: {e}')
             return None
         
-    def get_refresh_tokens(self, refresh_token):
+    def get_refresh_tokens(refresh_token):
         data = {
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
+            'client_id': Discord.client_id,
+            'client_secret': Discord.client_secret,
             'grant_type': 'refresh_token',
-            'refresh_token': refresh_token
+            'refresh_token': refresh_token,
         }
-
+        print(data)
         headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
         }
+        r = requests.post('https://discord.com/api/v8/oauth2/token', data=data, headers=headers)
 
-        tokens = requests.post('https://discord.com/api/oauth2/token', data=data, headers=headers)
-        return tokens.json() 
+        if r.status_code == 200:
+            tokens = r.json()
+            refresh_token = tokens['refresh_token']
+
+            return r.json()
+        else:
+            print(f"Error: {r.status_code}")
+            print(r.json())
+            return None
 
     def get_user_data(access_token):
         headers = {'Authorization': f'Bearer {access_token}'}
@@ -69,7 +76,7 @@ class Discord:
 
 class Authentication:
     def authenticate():
-        return redirect(Discord.login_url)
+        return redirect(Discord.login_url())
     
     def callback(discord_id, refresh_token):
         try:
@@ -83,4 +90,18 @@ class Authentication:
             new_user.save()
 
             return redirect(f'http://localhost:3000/admin?userId={new_user.uuid}')
+        
+    def get_access_token(user):
+        refresh_tokens = Discord.get_refresh_tokens(user.refresh_token)
+
+        Authentication.save_refresh_token(user, refresh_tokens['refresh_token'])
+
+        return refresh_tokens['access_token']
+
+    def save_refresh_token(user, refresh_token):
+        user.refresh_token = refresh_token
+        user.save()
+        
+
+
         

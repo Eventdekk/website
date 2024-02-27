@@ -49,14 +49,15 @@ class UserViewSet(viewsets.ModelViewSet):
             uuid.UUID(uuid_str)
         except ValueError:
             return Response({'error': 'Invalid UUID'}, status=400)
-        
+                
         user = UserModel.objects.get(uuid=uuid_str)
-
-        access_token = Discord.get_refresh_tokens(user.refresh_token)
+        access_token = Authentication.get_access_token(user)
 
         discord_user_data = Discord.get_user_data(access_token)
 
-        return Response({'uuid': user.uuid, 'discord_id': user.discord_id, 'username': discord_user_data.username})
+        return Response({'uuid': user.uuid, 'discord_id': user.discord_id, 'username': discord_user_data['username']})
+
+# curl -X POST https://discord.com/api/oauth2/token \ -d "client_id=1209503110159147088" \ -d "client_secret=_rMsrFcFfOs78p4F0HFbemAbl-HKbDsK" \ -d "grant_type=refresh_token" \ -d "refresh_token=urVpOrKJrCcAuVVFTilVwlarXAgpPl"
 
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
@@ -94,6 +95,6 @@ class DiscordCallbackView(View):
         if not discord_user_data:
             return HttpResponseBadRequest('Failed to retrieve user information from Discord')
         
-        return Authentication.callback(discord_user_data.id, refresh_token)
+        return Authentication.callback(discord_user_data['id'], refresh_token)
             
     
