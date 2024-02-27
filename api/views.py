@@ -1,8 +1,4 @@
-
-from django.shortcuts import render
-
-from django.shortcuts import redirect
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -13,12 +9,11 @@ from rest_framework.decorators import action
 
 from .serializers import *
 from .models import *
-from .discord import Discord
+from .auth import Discord, Authentication
 
 import uuid
 
 from config import *
-
 
 class CounterViewSet(viewsets.ModelViewSet):
     queryset = CounterModel.objects.all()
@@ -48,8 +43,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = UserModel.objects.all()
 
-    @action(detail=False, methods=['get'], url_path='get_user_id/(?P<uuid_str>[^/.]+)')
-    def get_user_id(self, request, uuid_str=None):
+    @action(detail=False, methods=['get'], url_path='get_user_data/(?P<uuid_str>[^/.]+)')
+    def get_user_data(self, request, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
         except ValueError:
@@ -57,7 +52,11 @@ class UserViewSet(viewsets.ModelViewSet):
         
         user = UserModel.objects.get(uuid=uuid_str)
 
-        return Response({'uuid': user.uuid, 'discord_id': user.discord_id})
+        access_token = Discord.get_refresh_tokens(user.refresh_token)
+
+        discord_user_data = Discord.get_user_data(access_token)
+
+        return Response({'uuid': user.uuid, 'discord_id': user.discord_id, 'username': discord_user_data.username})
 
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
@@ -77,7 +76,7 @@ class EventJoiningViewSet(viewsets.ModelViewSet):
     
 class DiscordOAuthView(View):
     def get(self, request, *args, **kwargs):
-        return Discord.authenticate()
+        return Authentication.authenticate()
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DiscordCallbackView(View):
@@ -85,12 +84,16 @@ class DiscordCallbackView(View):
         code = request.GET.get('code')
         if not code:
             return HttpResponseBadRequest('Authorization code missing')
+        
+        token_data = Discord.get_tokens(code)
+        access_token = token_data['access_token']
+        refresh_token = token_data['refresh_token']
 
-        discord_user_id = Discord.get_discord_user_id(code)
+        discord_user_data = Discord.get_user_data(access_token)
 
-        if not discord_user_id:
+        if not discord_user_data:
             return HttpResponseBadRequest('Failed to retrieve user information from Discord')
         
-        return Discord.callback(discord_user_id, code)
+        return Authentication.callback(discord_user_data.id, refresh_token)
             
     
