@@ -152,4 +152,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 APPEND_SLASH = True
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "snowflake",
+        "TIMEOUT": 60,
+        "OPTIONS": {"MAX_ENTRIES": 1000},
+    }
+}
+
 

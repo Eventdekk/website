@@ -4,6 +4,7 @@ import uuid
 
 from config import *
 from .models import *
+from .cache import *
 
 class Discord:
     client_id = DISCORD_CLIENT_ID
@@ -50,7 +51,6 @@ class Discord:
             'grant_type': 'refresh_token',
             'refresh_token': refresh_token,
         }
-        print(data)
         headers = {
             'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
         }
@@ -92,9 +92,16 @@ class Authentication:
             return redirect(f'http://localhost:3000/admin?userId={new_user.uuid}')
         
     def get_access_token(user):
+        access_token = Cache.get_access_token(user.uuid)
+        if access_token:
+            return access_token
+
         refresh_tokens = Discord.get_refresh_tokens(user.refresh_token)
 
+        print(refresh_tokens)
+
         Authentication.save_refresh_token(user, refresh_tokens['refresh_token'])
+        Cache.save_access_token(user.uuid, refresh_tokens['access_token'], refresh_tokens['expires_in'])
 
         return refresh_tokens['access_token']
 

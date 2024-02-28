@@ -96,5 +96,3 @@ class DiscordCallbackView(View):
             return HttpResponseBadRequest('Failed to retrieve user information from Discord')
         
         return Authentication.callback(discord_user_data['id'], refresh_token)
-            
-    
