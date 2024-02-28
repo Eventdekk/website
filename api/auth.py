@@ -78,9 +78,11 @@ class Authentication:
     def authenticate():
         return redirect(Discord.login_url())
     
-    def callback(discord_id, refresh_token):
+    def callback(discord_id, access_token, refresh_token, expires_in):
         try:
             user = UserModel.objects.get(discord_id=discord_id)
+            Authentication.save_refresh_token(user, refresh_token)
+            Cache.save_access_token(user.uuid, access_token, expires_in)
             
             return redirect(f'http://localhost:3000/admin?userId={user.uuid}')
         except UserModel.DoesNotExist:
@@ -88,6 +90,8 @@ class Authentication:
 
             new_user = UserModel(discord_id=discord_id, uuid=new_uuid.hex, refresh_token=refresh_token)
             new_user.save()
+
+            Cache.save_access_token(new_user.uuid, access_token, expires_in)
 
             return redirect(f'http://localhost:3000/admin?userId={new_user.uuid}')
         
@@ -97,8 +101,6 @@ class Authentication:
             return access_token
 
         refresh_tokens = Discord.get_refresh_tokens(user.refresh_token)
-
-        print(refresh_tokens)
 
         Authentication.save_refresh_token(user, refresh_tokens['refresh_token'])
         Cache.save_access_token(user.uuid, refresh_tokens['access_token'], refresh_tokens['expires_in'])

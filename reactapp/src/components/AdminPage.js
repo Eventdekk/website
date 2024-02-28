@@ -75,7 +75,8 @@ export function AdminPage() {
   return (
     <Page>
       <div class="text-center p-5">
-        <Title>You are logged in with discord id: {data.discord_id}</Title>
+        <Title>You are logged in as</Title>
+        <Title style="font-bold">{data.username}</Title>
         <DiscordLogOutButton setLogged={setLogged} />
       </div>
     </Page>

@@ -89,10 +89,11 @@ class DiscordCallbackView(View):
         token_data = Discord.get_tokens(code)
         access_token = token_data['access_token']
         refresh_token = token_data['refresh_token']
+        expires_in = token_data['expires_in']
 
         discord_user_data = Discord.get_user_data(access_token)
 
         if not discord_user_data:
             return HttpResponseBadRequest('Failed to retrieve user information from Discord')
         
-        return Authentication.callback(discord_user_data['id'], refresh_token)
+        return Authentication.callback(discord_user_data['id'], access_token, refresh_token, expires_in)
