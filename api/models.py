@@ -2,28 +2,22 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
-class CounterModel(models.Model):
-    count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return "Counter"
-
 class UserModel(models.Model):
-    discord_id = models.IntegerField()
+    discord_id = models.IntegerField(unique=True)  
     uuid = models.CharField(max_length=32, default="0")
     refresh_token = models.CharField(max_length=32, default="0")
 
 class GroupModel(models.Model):
+    owner = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='owned_groups', null=True)
     name = models.CharField(max_length=50)
-    owner_id = models.IntegerField()
 
 class GroupMembersModel(models.Model):
-    group_id = models.BigIntegerField()
-    user_id = models.BigIntegerField()
+    group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name="members", null=True)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="groups", null=True)
     role = models.SmallIntegerField()
 
 class EventModel(models.Model):
-    group_id = models.BigIntegerField()
+    group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name='events', null=True)
     name = models.CharField(max_length=50)
     description = models.TextField()
     ifc_link = models.URLField()
@@ -31,11 +25,11 @@ class EventModel(models.Model):
     date = models.DateField(default=timezone.now().today)
 
 class EventJoiningModel(models.Model):
-    event_id = models.BigIntegerField()
-    group_id = models.BigIntegerField()
+    event = models.ForeignKey(EventModel, on_delete=models.CASCADE, related_name='joinings', null=True)
+    group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name="joining_events", null=True)
     departure = models.CharField(max_length=4)
     arrival = models.CharField(max_length=4)
     duration = models.DurationField()
     est_pilots = models.SmallIntegerField()
-    act_pilots = models.SmallIntegerField() 
+    act_pilots = models.SmallIntegerField()
 

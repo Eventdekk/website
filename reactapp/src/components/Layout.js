@@ -1,12 +1,19 @@
 import { Outlet, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+
 import { Text, ClickableText } from "./utils/Text.js";
 import Logo from "./utils/Logo.js";
 import DarkModeToggleButton from "./utils/DarkModeToggleButton.js";
 import SearchBar from "./utils/SearchBar.js";
+import { ProfilePicture } from "./utils/Profile.js";
+import { useUser } from "./site/UserContext.js";
 
 function Layout() {
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { isLoading, isLogged, discordId, avatar } = useUser();
+
+  const src = `https://cdn.discordapp.com/avatars/${discordId}/${avatar}.jpg`;
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -85,7 +92,7 @@ function Layout() {
               </Link>
             </li>
             <li class="pb-1">
-              <Link to="/admin">
+              <Link to="/login">
                 <ClickableText>Login</ClickableText>
               </Link>
             </li>
@@ -97,7 +104,11 @@ function Layout() {
           <div class="pr-4 flex-shrink-0">
             <SearchBar placeholder="Search..." onChange={handleSearchChange} />
           </div>
-          <DarkModeToggleButton class="ml-2"></DarkModeToggleButton>
+          <div class="mr-2">
+            <DarkModeToggleButton></DarkModeToggleButton>
+          </div>
+
+          <ProfilePicture src={src} isLoading={isLoading}></ProfilePicture>
         </div>
       </nav>
 

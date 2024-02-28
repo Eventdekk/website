@@ -5,7 +5,6 @@ from .views import *
 
 router = routers.DefaultRouter()
 
-router.register(r'counter', CounterViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'groupmembers', GroupMembersViewSet)

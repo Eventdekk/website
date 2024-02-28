@@ -15,30 +15,6 @@ import uuid
 
 from config import *
 
-class CounterViewSet(viewsets.ModelViewSet):
-    queryset = CounterModel.objects.all()
-    serializer_class = CounterSerializer
-
-    def update(self, request, *args, **kwards):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-
-        old_count = instance.count
-        new_count = serializer.validated_data.get('count', None)
-
-        if new_count <= old_count:
-            new_count = old_count + 1
-
-        if new_count is not None:
-            if new_count > 10:
-                new_count = 0
-
-        instance.count = new_count
-        instance.save()
-        
-        return Response({"message": "Data updated successfully"})
-
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = UserModel.objects.all()
@@ -55,9 +31,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
         discord_user_data = Discord.get_user_data(access_token)
 
-        return Response({'uuid': user.uuid, 'discord_id': user.discord_id, 'username': discord_user_data['username']})
+        print(discord_user_data)
 
-# curl -X POST https://discord.com/api/oauth2/token \ -d "client_id=1209503110159147088" \ -d "client_secret=_rMsrFcFfOs78p4F0HFbemAbl-HKbDsK" \ -d "grant_type=refresh_token" \ -d "refresh_token=urVpOrKJrCcAuVVFTilVwlarXAgpPl"
+        return Response({'uuid': user.uuid, 'discord_id': str(user.discord_id), 'username': discord_user_data['global_name'], 'avatar': str(discord_user_data['avatar'])})
 
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
