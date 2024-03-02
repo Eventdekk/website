@@ -16,5 +16,6 @@ urlpatterns = [
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('auth/discord/', DiscordOAuthView.as_view(), name='discord_oauth'),
     path('auth/discord/callback/', csrf_exempt(DiscordCallbackView.as_view()), name='discord_callback'),
+    path('clear/', ClearCache.as_view(), name='clear_cache'),
     path('', include(router.urls))
 ]

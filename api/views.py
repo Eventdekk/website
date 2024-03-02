@@ -10,6 +10,7 @@ from rest_framework.decorators import action
 from .serializers import *
 from .models import *
 from .auth import Discord, Authentication
+from .cache import Cache
 
 import uuid
 
@@ -29,8 +30,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user = UserModel.objects.get(uuid=uuid_str)
         access_token = Authentication.get_access_token(user)
 
-        discord_user_data = Discord.get_user_data(access_token)
-
+        discord_user_data = Discord.get_user_data(access_token, user)
         print(discord_user_data)
 
         return Response({'uuid': user.uuid, 'discord_id': str(user.discord_id), 'username': discord_user_data['global_name'], 'avatar': str(discord_user_data['avatar'])})
@@ -73,3 +73,8 @@ class DiscordCallbackView(View):
             return HttpResponseBadRequest('Failed to retrieve user information from Discord')
         
         return Authentication.callback(discord_user_data['id'], access_token, refresh_token, expires_in)
+    
+class ClearCache(View):
+    def get(self, request, *args, **kwards):
+        Cache.clear()
+        return Response({'status': 'success'})

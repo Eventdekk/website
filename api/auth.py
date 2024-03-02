@@ -66,11 +66,21 @@ class Discord:
             print(r.json())
             return None
 
-    def get_user_data(access_token):
+    def get_user_data(access_token, user=None):
+        if user:
+            cached_data = Cache.get_user_data(user.uuid)
+            if cached_data:
+                return cached_data
+        
         headers = {'Authorization': f'Bearer {access_token}'}
         user_response = requests.get('https://discord.com/api/users/@me', headers=headers)
         user_response.raise_for_status()  # Raise an exception for any HTTP error status codes
         user_data = user_response.json()
+
+        user = UserModel.objects.get(discord_id=user_data['id'])
+
+        if user:
+            Cache.save_user_data(user.uuid, user_data['global_name'], user_data['avatar'])
 
         return user_data
 
