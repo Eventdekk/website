@@ -2,15 +2,21 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
+from . import UserModelManager, GroupModelManager
+
 class UserModel(models.Model):
     discord_id = models.IntegerField(unique=True)  
     uuid = models.CharField(max_length=32, default="0")
     refresh_token = models.CharField(max_length=32, default="0")
 
+    objects = UserModelManager()
+
 class GroupModel(models.Model):
     owner = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='owned_groups', null=True)
     name = models.CharField(max_length=50)
     profile_link = models.URLField()
+
+    objects = GroupModelManager()
 
 class GroupMembersModel(models.Model):
     group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name="members", null=True)

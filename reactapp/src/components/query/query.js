@@ -40,3 +40,16 @@ export async function fetchUser(userId) {
     throw error;
   }
 }
+
+export async function fetchUserGroups(userId) {
+  if (userId === null) {
+    return;
+  }
+
+  try {
+    return await fetchData("/users/get_user_groups/" + userId + "/");
+  } catch (error) {
+    console.log("Error: " + error);
+    throw error;
+  }
+}

@@ -8,10 +8,26 @@ import { Text, Title } from "./utils/Text.js";
 import { useUser } from "./site/UserContext";
 import { ProfilePicture } from "./utils/Profile.js";
 
-export function AdminPage() {
-  const { username, setLogged } = useUser();
+import { fetchUserGroups } from "./query/query.js";
 
-  const groups = {};
+export function AdminPage() {
+  const { username, setLogged, userId } = useUser();
+
+  const { data, isLoading, error } = useQuery(
+    userId ? ["user_groups", userId] : null,
+    () => fetchUserGroups(userId),
+    {
+      enabled: userId !== null,
+    }
+  );
+
+  if (isLoading) {
+    return <Page></Page>;
+  }
+
+  if (error) {
+    return <Page></Page>;
+  }
 
   return (
     <Page>
@@ -19,10 +35,17 @@ export function AdminPage() {
         <Title>Welcome back</Title>
         <Title style="font-bold">{username}</Title>
         <DiscordLogOutButton setLogged={setLogged} />
-        <Title>Choose from a group to administrate</Title>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 min-h-screen items-center justify-center">
-          {groups.map((group, index) => (
-            <ProfilePicture key={index}></ProfilePicture>
+        <Title style={"m-5"}>Choose from a group to administrate</Title>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 items-center justify-center">
+          {data.map((group, index) => (
+            <div class="flex items-center cursor-pointer rounded-xl bg-white dark:bg-midnight p-2 duration-200 hover:bg-slate-100 dark:hover:bg-midnight2">
+              <ProfilePicture
+                key={index}
+                style="m-2 h-20 rounded-xl"
+                src={group.profile_link}
+              ></ProfilePicture>
+              <Title style="font-bold m-2">{group.name}</Title>
+            </div>
           ))}
         </div>
       </div>
