@@ -8,7 +8,7 @@ import SearchBar from "./utils/SearchBar.js";
 import { ProfilePicture } from "./utils/Profile.js";
 import { useUser } from "./site/UserContext.js";
 
-function Layout() {
+export default function Layout() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { isLoading, isLogged, discordId, avatar } = useUser();
@@ -116,5 +116,3 @@ function Layout() {
     </div>
   );
 }
-
-export default Layout;

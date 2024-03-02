@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, redirect } from "react-router-dom";
 import { useQuery } from "react-query";
 
 import { fetchUser } from "../query/query.js";
@@ -12,6 +12,7 @@ export function UserProvider({ children }) {
   const [userId, setUserId] = useState(null);
   const [discordId, setDiscordId] = useState(null);
   const [avatar, setAvatar] = useState(null);
+  const [username, setUsername] = useState("");
 
   const { data, isLoading, error } = useQuery(
     userId ? ["user", userId] : null,
@@ -20,8 +21,6 @@ export function UserProvider({ children }) {
       enabled: userId !== null,
     }
   );
-
-  console.log(data);
 
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -51,6 +50,7 @@ export function UserProvider({ children }) {
     if (!isLoading && data) {
       setDiscordId(data.discord_id);
       setAvatar(data.avatar);
+      setUsername(data.username);
     }
   }, [isLoading, data]);
 
@@ -69,11 +69,13 @@ export function UserProvider({ children }) {
         isLoading,
         isLogged,
         setLogged,
+        error,
         userId,
         discordId,
         setDiscordId,
         avatar,
         setAvatar,
+        username,
       }}
     >
       {children}
@@ -82,5 +84,9 @@ export function UserProvider({ children }) {
 }
 
 export function useUser() {
-  return useContext(UserContext);
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
 }

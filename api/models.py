@@ -10,6 +10,7 @@ class UserModel(models.Model):
 class GroupModel(models.Model):
     owner = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='owned_groups', null=True)
     name = models.CharField(max_length=50)
+    profile_link = models.URLField()
 
 class GroupMembersModel(models.Model):
     group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name="members", null=True)

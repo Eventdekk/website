@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 
 import Page from "./site/Page.js";
@@ -8,15 +8,7 @@ import { fetchUser } from "./query/query.js";
 import { useUser } from "./site/UserContext";
 
 export function LoginPage() {
-  const { isLogged, setLogged, userId, setDiscordId, setAvatar } = useUser();
-
-  const { data, isLoading, error } = useQuery(
-    userId ? ["user", userId] : null,
-    () => fetchUser(userId),
-    {
-      enabled: userId !== null,
-    }
-  );
+  const { isLogged, setLogged, isLoading, error } = useUser();
 
   if (!isLogged) {
     return (
@@ -52,11 +44,7 @@ export function LoginPage() {
 
   return (
     <Page>
-      <div class="text-center p-5">
-        <Title>You are logged in as</Title>
-        <Title style="font-bold">{data.username}</Title>
-        <DiscordLogOutButton setLogged={setLogged} />
-      </div>
+      <Navigate to="/admin" />
     </Page>
   );
 }
