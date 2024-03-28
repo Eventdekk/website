@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, redirect } from "react-router-dom";
+import { useLocation, redirect, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 
-import Page from "./site/Page.js";
-import { DiscordLogOutButton } from "./LoginPage.js";
-import { SecondaryText, Text, Title } from "./utils/Text.js";
-import { useUser } from "./site/UserContext.js";
-import { ProfilePicture } from "./utils/Profile.js";
-import { convertDatesToObjects, WeeklyView } from "./utils/Calendar.js";
+import Page from "../../site/Page.js";
+import { DiscordLogOutButton } from "../LoginPage.js";
+import { SecondaryText, Text, Title, ClickableText } from "../../utils/Text.js";
+import { useUser } from "../../site/UserContext.js";
+import { ProfilePicture } from "../../utils/Profile.js";
+import { convertDatesToObjects, WeeklyView } from "../../utils/Calendar.js";
+import { HoverBox } from "../../utils/Box.js";
 
-import { fetchUserGroups, fetchGroupEvents } from "./query/query.js";
+import { fetchUserGroups, fetchGroupEvents } from "../../query/query.js";
 
 export function AdminPage() {
-  const { username, setLogged, userId } = useUser();
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const { username, setLogged, userId, selectedGroup, setSelectedGroup } =
+    useUser();
 
   const { data, isLoading, error } = useQuery(
     userId ? ["user_groups", userId] : null,
@@ -54,9 +55,9 @@ export function AdminPage() {
         <Title style={"m-5"}>Choose from a group to administrate</Title>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 items-center justify-center">
           {data.map((group, index) => (
-            <div
+            <HoverBox
               onClick={() => handleGroupSelection(group)}
-              class="m-2 flex items-center cursor-pointer rounded-xl bg-white dark:bg-midnight p-2 duration-200 hover:bg-slate-100 dark:hover:bg-midnight2"
+              style="m-2 flex items-center"
             >
               <ProfilePicture
                 key={index}
@@ -64,7 +65,7 @@ export function AdminPage() {
                 src={group.profile_link}
               ></ProfilePicture>
               <Title style="font-bold m-2">{group.name}</Title>
-            </div>
+            </HoverBox>
           ))}
         </div>
       </div>
@@ -125,7 +126,9 @@ export function UpcomingEvent({ data, isLoading, error }) {
     return (
       <div class="my-2 flex items-center rounded-xl p-2 bg-slate-100 dark:bg-midnight2">
         <SecondaryText>No upcoming events</SecondaryText>
-        <Text style="px-2 text-xl">Create an event</Text>
+        <Link to="/admin/create">
+          <ClickableText style="px-2 text-xl">Create an event</ClickableText>
+        </Link>
       </div>
     );
   }

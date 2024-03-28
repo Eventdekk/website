@@ -1,12 +1,12 @@
 import { Outlet, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Text, ClickableText } from "./utils/Text.js";
-import Logo from "./utils/Logo.js";
-import DarkModeToggleButton from "./utils/DarkModeToggleButton.js";
-import SearchBar from "./utils/SearchBar.js";
-import { ProfilePicture } from "./utils/Profile.js";
-import { useUser } from "./site/UserContext.js";
+import { Text, ClickableText } from "../utils/Text.js";
+import Logo from "../utils/Logo.js";
+import DarkModeToggleButton from "../utils/DarkModeToggleButton.js";
+import SearchBar from "../utils/SearchBar.js";
+import { ProfilePicture } from "../utils/Profile.js";
+import { useUser } from "../site/UserContext.js";
 
 export default function Layout() {
   const [searchTerm, setSearchTerm] = useState("");

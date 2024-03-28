@@ -6,17 +6,18 @@ import {
   Navigate,
   Route,
 } from "react-router-dom";
-import Home from "./components/Home.js";
-import CalendarPage from "./components/CalendarPage.js";
-import { AdminPage } from "./components/AdminPage.js";
-import { LoginPage } from "./components/LoginPage.js";
-import Layout from "./components/Layout.js";
+import Home from "./components/pages/Home.js";
+import CalendarPage from "./components/pages/CalendarPage.js";
+import { AdminPage } from "./components/pages/admin/AdminPage.js";
+import { LoginPage } from "./components/pages/LoginPage.js";
+import Layout from "./components/pages/Layout.js";
 import { ThemeProvider } from "./components/site/ThemeContext.js";
 import { PopupProvider } from "./components/site/PopupContext.js";
 import { UserProvider } from "./components/site/UserContext.js";
 
 import { useUser } from "./components/site/UserContext.js";
 import { AdminNavbar } from "./components/admin/AdminNavbar.js";
+import { CreateEventPage } from "./components/pages/admin/CreateEventPage.js";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,6 +52,10 @@ function App() {
             {
               index: true,
               element: <AdminPage />,
+            },
+            {
+              path: "create",
+              element: <CreateEventPage />,
             },
           ],
         },

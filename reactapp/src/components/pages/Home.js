@@ -1,8 +1,8 @@
-import Page from "./site/Page.js";
-import Event from "./utils/Event.js";
-import { Text, Title } from "./utils/Text.js";
+import Page from "../site/Page.js";
+import Event from "../utils/Event.js";
+import { Text, Title } from "../utils/Text.js";
 import { useQuery } from "react-query";
-import { fetchEvents } from "./query/query.js";
+import { fetchEvents } from "../query/query.js";
 
 export default function Home() {
   //const myArray = Array.from({ length: 9 }, (_, index) => index);

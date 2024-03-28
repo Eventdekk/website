@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Navigate, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 
-import Page from "./site/Page.js";
-import { Text, Title } from "./utils/Text.js";
-import { fetchUser } from "./query/query.js";
-import { useUser } from "./site/UserContext";
+import Page from "../site/Page.js";
+import { Text, Title } from "../utils/Text.js";
+import { fetchUser } from "../query/query.js";
+import { useUser } from "../site/UserContext.js";
 
 export function LoginPage() {
   const { isLogged, setLogged, isLoading, error } = useUser();
@@ -70,7 +70,10 @@ export function DiscordLogOutButton({ setLogged }) {
 
   return (
     <Link to="/login">
-      <button onClick={handleAuthClick} class="m-1 p-2 rounded bg-stone-800">
+      <button
+        onClick={handleAuthClick}
+        class="m-1 p-2 rounded text-white bg-red-600 dark:bg-red-900"
+      >
         <Text>Log out</Text>
       </button>
     </Link>

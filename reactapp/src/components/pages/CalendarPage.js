@@ -4,12 +4,12 @@ import {
   MonthlyView,
   WeeklyView,
   convertDatesToObjects,
-} from "./utils/Calendar.js";
-import Page from "./site/Page.js";
-import { ClickableText } from "./utils/Text.js";
+} from "../utils/Calendar.js";
+import Page from "../site/Page.js";
+import { ClickableText } from "../utils/Text.js";
 import { useQuery } from "react-query";
-import { fetchEvents } from "./query/query.js";
-import { Map } from "./utils/Map.js";
+import { fetchEvents } from "../query/query.js";
+import { Map } from "../utils/Map.js";
 
 export default function CalendarPage() {
   const [view, setView] = useState("monthly");

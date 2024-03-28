@@ -13,6 +13,7 @@ export function UserProvider({ children }) {
   const [discordId, setDiscordId] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [username, setUsername] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   const { data, isLoading, error } = useQuery(
     userId ? ["user", userId] : null,
@@ -76,6 +77,8 @@ export function UserProvider({ children }) {
         avatar,
         setAvatar,
         username,
+        selectedGroup,
+        setSelectedGroup,
       }}
     >
       {children}
