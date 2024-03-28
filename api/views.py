@@ -20,7 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = UserModel.objects.all()
 
-    @action(detail=False, methods=['get'], url_path='get_user_data/(?P<uuid_str>[^/.]+)')
+    @action(detail=False, methods=['get'], url_path='data/(?P<uuid_str>[^/.]+)')
     def get_user_data(self, request, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
@@ -36,21 +36,29 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response({'uuid': user.uuid, 'discord_id': str(user.discord_id), 'username': discord_user_data['global_name'], 'avatar': str(discord_user_data['avatar'])})
     
-    @action(detail=False, methods=['get'], url_path='get_user_groups/(?P<uuid_str>[^/.]+)')
-    def user_user_groups(self, request, uuid_str=None):
+    @action(detail=False, methods=['get'], url_path='groups/(?P<uuid_str>[^/.]+)')
+    def get_user_groups(self, request, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
         except ValueError:
             return Response({'error': 'Invalid UUID'}, status=400)
         groups = UserModel.objects.get_user_groups(uuid_str)
 
-        groups_data = [{'name': group.name, 'profile_link': group.profile_link} for group in groups]
+        groups_data = [{'id': group['group'].id, 'name': group['group'].name, 'profile_link': group['group'].profile_link, 'role': group['role']} for group in groups]
 
         return Response(groups_data)
 
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     queryset = GroupModel.objects.all()
+
+    @action(detail=False, methods=['get'], url_path='events/(?P<group_id>\d+)')
+    def get_group_events(self, request, group_id=None):
+        events = GroupModel.objects.get_group_events(group_id)
+
+        data = [{'name': event.name, 'description': event.description, 'ifc_link': event.ifc_link, 'thumbnail': event.thumbnail.url, 'date': event.date,} for event in events]
+
+        return Response(data)
 
 class GroupMembersViewSet(viewsets.ModelViewSet):
     serializer_class = GroupMembersSerializer

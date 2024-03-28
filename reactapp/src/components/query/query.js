@@ -34,7 +34,7 @@ export async function fetchUser(userId) {
   }
 
   try {
-    return await fetchData("/users/get_user_data/" + userId + "/");
+    return await fetchData("/users/data/" + userId + "/");
   } catch (error) {
     console.log("Error: " + error);
     throw error;
@@ -47,7 +47,20 @@ export async function fetchUserGroups(userId) {
   }
 
   try {
-    return await fetchData("/users/get_user_groups/" + userId + "/");
+    return await fetchData("/users/groups/" + userId + "/");
+  } catch (error) {
+    console.log("Error: " + error);
+    throw error;
+  }
+}
+
+export async function fetchGroupEvents(groupId) {
+  if (groupId === null) {
+    return;
+  }
+
+  try {
+    return await fetchData("/groups/events/" + groupId + "/");
   } catch (error) {
     console.log("Error: " + error);
     throw error;

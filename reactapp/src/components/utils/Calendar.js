@@ -279,3 +279,12 @@ function EventHolder({ date, event }) {
     </>
   );
 }
+
+export function convertDatesToObjects(events) {
+  return events.map((event) => {
+    return {
+      ...event,
+      date: new Date(event.date),
+    };
+  });
+}

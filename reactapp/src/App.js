@@ -16,6 +16,7 @@ import { PopupProvider } from "./components/site/PopupContext.js";
 import { UserProvider } from "./components/site/UserContext.js";
 
 import { useUser } from "./components/site/UserContext.js";
+import { AdminNavbar } from "./components/admin/AdminNavbar.js";
 
 function App() {
   const router = createBrowserRouter([
@@ -43,10 +44,15 @@ function App() {
           path: "admin",
           element: (
             <PrivateRoute>
-              <AdminPage />
+              <AdminNavbar />
             </PrivateRoute>
           ),
-          children: [],
+          children: [
+            {
+              index: true,
+              element: <AdminPage />,
+            },
+          ],
         },
         {
           path: "*",
@@ -69,7 +75,11 @@ function PrivateRoute({ children }) {
 }
 
 function NoPage() {
-  return <h1>404</h1>;
+  return (
+    <h1 class="p-4 font-semibold text-center text-xl text-black dark:text-white">
+      404
+    </h1>
+  );
 }
 
 export default App;

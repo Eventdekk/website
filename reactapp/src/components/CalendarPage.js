@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-import { MonthlyView, WeeklyView } from "./utils/Calendar.js";
+import {
+  MonthlyView,
+  WeeklyView,
+  convertDatesToObjects,
+} from "./utils/Calendar.js";
 import Page from "./site/Page.js";
 import { ClickableText } from "./utils/Text.js";
 import { useQuery } from "react-query";
@@ -38,15 +42,6 @@ export default function CalendarPage() {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
-  function convertDatesToObjects(events) {
-    return events.map((event) => {
-      return {
-        ...event,
-        date: new Date(event.date),
-      };
-    });
-  }
 
   const modifiedEvents = convertDatesToObjects(data);
 

@@ -20,10 +20,10 @@ export default function Layout() {
     // Add additional logic for handling search here
   };
   return (
-    <div class="absolute w-full">
+    <div class="absolute w-full z-20">
       {/* Navigation for mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full overflow-hidden bg-white dark:bg-midnight">
-        <div class="sticky bottom-0 left-0 z-50 w-full h-16 border-t border-gray-200 dark:bg-midnight dark:border-gray-600">
+      <nav class="md:hidden fixed bottom-0 left-0 w-full overflow-hidden bg-white dark:bg-midnight">
+        <div class="sticky bottom-0 left-0 w-full h-16 border-t border-gray-200 dark:bg-midnight dark:border-gray-600">
           <div class="grid h-full max-w-lg grid-cols-3 mx-auto">
             <Link
               to="/calendar"
@@ -76,42 +76,46 @@ export default function Layout() {
       </nav>
 
       {/* Navigation for desktop */}
-      <nav class="hidden md:flex justify-between p-2 bg-white dark:bg-midnight">
-        <div>
-          <ul class="flex items-center">
-            <li class="mr-10">
-              <Link to="/">
-                <Logo>
-                  <Text style="font-beam text-lg">eventdekk</Text>
-                </Logo>
-              </Link>
-            </li>
-            <li class="mr-8 pb-1">
-              <Link to="/calendar">
-                <ClickableText>Calendar</ClickableText>
-              </Link>
-            </li>
-            <li class="pb-1">
-              <Link to="/login">
-                <ClickableText>Login</ClickableText>
-              </Link>
-            </li>
-            <li class="flex-grow"></li>
-          </ul>
-        </div>
-
-        <div class="flex items-center">
-          <div class="pr-4 flex-shrink-0">
-            <SearchBar placeholder="Search..." onChange={handleSearchChange} />
+      {/*<nav class="hidden md:flex justify-between p-2 bg-white dark:bg-midnight">*/}
+      <div class="sticky top-0 z-20 bg-white/80 dark:bg-midnight/80 backdrop-blur-lg">
+        <nav class="hidden md:flex justify-between p-2 w-full ">
+          <div>
+            <ul class="flex items-center">
+              <li class="mr-10">
+                <Link to="/">
+                  <Logo>
+                    <Text style="font-beam text-lg">eventdekk</Text>
+                  </Logo>
+                </Link>
+              </li>
+              <li class="mr-8 pb-1">
+                <Link to="/calendar">
+                  <ClickableText>Calendar</ClickableText>
+                </Link>
+              </li>
+              <li class="pb-1">
+                <Link to="/login">
+                  <ClickableText>Login</ClickableText>
+                </Link>
+              </li>
+              <li class="flex-grow"></li>
+            </ul>
           </div>
-          <div class="mr-2">
-            <DarkModeToggleButton></DarkModeToggleButton>
+          <div class="flex items-center">
+            <div class="pr-4 flex-shrink-0">
+              <SearchBar
+                placeholder="Search..."
+                onChange={handleSearchChange}
+              />
+            </div>
+            <div class="mr-2">
+              <DarkModeToggleButton></DarkModeToggleButton>
+            </div>
+
+            <ProfilePicture src={src} isLoading={isLoading}></ProfilePicture>
           </div>
-
-          <ProfilePicture src={src} isLoading={isLoading}></ProfilePicture>
-        </div>
-      </nav>
-
+        </nav>
+      </div>
       <Outlet />
     </div>
   );
