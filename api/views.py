@@ -68,9 +68,13 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = EventModel.objects.all()
 
-class EventJoiningViewSet(viewsets.ModelViewSet):
-    serializer_class = EventJoiningSerializer
-    queryset = EventJoiningModel.objects.all()
+class EventUnitViewSet(viewsets.ModelViewSet):
+    serializer_class = EventUnitSerializer
+    queryset = EventUnitModel.objects.all()
+
+class EventFlightViewSet(viewsets.ModelViewSet):
+    serializer_class = EventFlightSerializer
+    queryset = EventFlightModel.objects.all()
     
 class DiscordOAuthView(View):
     def get(self, request, *args, **kwargs):

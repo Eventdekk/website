@@ -9,7 +9,8 @@ router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'groupmembers', GroupMembersViewSet)
 router.register(r'events', EventViewSet)
-router.register(r'eventjoins', EventJoiningViewSet)
+router.register(r'eventunits', EventUnitViewSet)
+router.register(r'eventflights', EventFlightViewSet)
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
