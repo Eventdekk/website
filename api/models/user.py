@@ -5,8 +5,8 @@ class UserModelManager(models.Manager):
     def get_user_groups(self, uuid):
         try:
             user = self.model.objects.get(uuid=uuid)
-        except self.model.DoesNotExist:
-            return []
+        except self.model.DoesNotExist as e:
+            raise e
     
         group_memberships = apps.get_model('api', 'GroupMembersModel').objects.filter(user=user)
 

@@ -20,14 +20,19 @@ class GroupMembersSerializer(serializers.HyperlinkedModelSerializer):
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EventModel
-        fields = ('id', 'group', 'name', 'description', 'ifc_link', 'thumbnail')
+        fields = ('id', 'group', 'name', 'description', 'ifc_link', 'thumbnail', 'units')
 
 class EventUnitSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EventUnitModel
-        fields = ('id', 'event', 'type', 'name', 'date')
+        fields = ('id', 'event', 'type', 'name', 'date', 'flights')
+
 
 class EventFlightSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EventFlightModel
         fields = ('id', 'unit', 'group', 'departure', 'departure_time', 'arrival', 'arrival_time', 'est_pilots', 'act_pilots')
+
+
+
+

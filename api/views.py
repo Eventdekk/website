@@ -27,26 +27,29 @@ class UserViewSet(viewsets.ModelViewSet):
         except ValueError:
             return Response({'error': 'Invalid UUID'}, status=400)
         
-        #handle user not found
-        user = UserModel.objects.get(uuid=uuid_str)
-        access_token = Authentication.get_access_token(user)
+        try:
+            user = UserModel.objects.get(uuid=uuid_str)
+            access_token = Authentication.get_access_token(user)
+            discord_user_data = Discord.get_user_data(access_token, user)
+            return Response({'uuid': user.uuid, 'discord_id': str(user.discord_id), 'username': discord_user_data['global_name'], 'avatar': str(discord_user_data['avatar'])})
+        
+        except UserModel.DoesNotExist:
+            return Response({"message": "User not found"}, status=404)
 
-        discord_user_data = Discord.get_user_data(access_token, user)
-        print(discord_user_data)
-
-        return Response({'uuid': user.uuid, 'discord_id': str(user.discord_id), 'username': discord_user_data['global_name'], 'avatar': str(discord_user_data['avatar'])})
-    
     @action(detail=False, methods=['get'], url_path='groups/(?P<uuid_str>[^/.]+)')
     def get_user_groups(self, request, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
         except ValueError:
             return Response({'error': 'Invalid UUID'}, status=400)
-        groups = UserModel.objects.get_user_groups(uuid_str)
+        
+        try:
+            groups = UserModel.objects.get_user_groups(uuid_str)
+            groups_data = [{'id': group['group'].id, 'name': group['group'].name, 'profile_link': group['group'].profile_link, 'role': group['role']} for group in groups]
+            return Response(groups_data)
 
-        groups_data = [{'id': group['group'].id, 'name': group['group'].name, 'profile_link': group['group'].profile_link, 'role': group['role']} for group in groups]
-
-        return Response(groups_data)
+        except UserModel.DoesNotExist:
+            return Response({"message": "User not found"}, status=404)
 
 class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
@@ -54,12 +57,19 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='events/(?P<group_id>\d+)')
     def get_group_events(self, request, group_id=None):
-        events = GroupModel.objects.get_group_events(group_id)
-
-        data = [{'name': event.name, 'description': event.description, 'ifc_link': event.ifc_link, 'thumbnail': event.thumbnail.url, 'date': event.date,} for event in events]
-
-        return Response(data)
-
+        try:
+            events = GroupModel.objects.get_group_events(group_id)
+            data = []
+            for event in events:
+                event_data = EventSerializer(event, context={'request': request}).data
+                event_data['start_date'] = event.units.first().date
+                event_data['end_date'] = event.units.last().date
+                data.append(event_data)
+            return Response(data)
+        
+        except EventModel.DoesNotExist:
+            return Response({"message": "Group not found"}, status=404)
+ 
 class GroupMembersViewSet(viewsets.ModelViewSet):
     serializer_class = GroupMembersSerializer
     queryset = GroupMembersModel.objects.all()
@@ -67,6 +77,21 @@ class GroupMembersViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = EventModel.objects.all()
+
+    @action(detail=False, methods=['get'], url_path='details/(?P<event_id>\d+)')
+    def get_event_details(self, request, event_id=None):
+        try:
+            event_units = EventModel.objects.get_event_details(event_id)
+            data = []
+            for unit in event_units:
+                unit_data = EventUnitSerializer(unit, context={'request': request}).data
+                flights_data = EventFlightSerializer(unit.flights.all(), many=True, context={'request': request}).data
+                unit_data['flights'] = flights_data
+                data.append(unit_data)
+            return Response(data)
+        
+        except EventModel.DoesNotExist:
+            return Response({"message": "Event not found"}, status=404)
 
 class EventUnitViewSet(viewsets.ModelViewSet):
     serializer_class = EventUnitSerializer

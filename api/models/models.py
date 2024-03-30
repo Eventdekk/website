@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
-from . import UserModelManager, GroupModelManager
+from . import UserModelManager, GroupModelManager, EventModelManager
 
 class UserModel(models.Model):
     discord_id = models.IntegerField(unique=True)  
@@ -29,6 +29,8 @@ class EventModel(models.Model):
     description = models.TextField()
     ifc_link = models.URLField()
     thumbnail = models.ImageField()
+
+    objects = EventModelManager()
 
 class EventUnitModel(models.Model):
     event = models.ForeignKey(EventModel, on_delete=models.CASCADE, related_name='units', null=True)
