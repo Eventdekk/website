@@ -4,6 +4,7 @@ import { ProfilePicture } from "./Profile.js";
 import { CalendarShow } from "./Calendar.js";
 import Banner from "./Banner.js";
 import { Popup } from "./Popup.js";
+import { HoverBox } from "./Box.js";
 import { usePopup } from "../site/PopupContext.js";
 
 //"https://images-ext-2.discordapp.net/external/A6xyp9sMfTBBCTSwsgbUa5dFDKu3cEmWMp_Tek68tE4/https/global.discourse-cdn.com/infiniteflight/optimized/4X/0/a/6/0a646d555e58ed792705ee22089c894854b812ab_2_1024x576.jpeg?format=webp&width=1014&height=570"
@@ -11,7 +12,7 @@ import { usePopup } from "../site/PopupContext.js";
 export default function Event({ data }) {
   const { isPopupOpen, openPopup, closePopup, togglePopup } = usePopup();
 
-  const dateObject = new Date(data.date);
+  const dateObject = new Date(data.start_date);
 
   const options = { month: "short", day: "numeric" };
   const formatted = new Intl.DateTimeFormat("en-US", options).format(
@@ -44,10 +45,7 @@ export default function Event({ data }) {
   return (
     <>
       <div class="p-3">
-        <div
-          onClick={toggleEventPopup}
-          class="cursor-pointer rounded-xl bg-white dark:bg-midnight p-2 hover:shadow-lg shadow-slate-100 dark:shadow-midnight2 duration-200 hover:bg-slate-100 dark:hover:bg-midnight2"
-        >
+        <HoverBox onClick={toggleEventPopup} style="cursor-pointer rounded-xl">
           <div class="flex">
             <div class="mr-2">
               <ProfilePicture
@@ -75,7 +73,7 @@ export default function Event({ data }) {
               day={day}
             ></CalendarShow>
           </div>
-        </div>
+        </HoverBox>
       </div>
     </>
   );

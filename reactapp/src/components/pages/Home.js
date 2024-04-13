@@ -5,8 +5,6 @@ import { useQuery } from "react-query";
 import { fetchEvents } from "../query/query.js";
 
 export default function Home() {
-  //const myArray = Array.from({ length: 9 }, (_, index) => index);
-
   const { data, isLoading, error } = useQuery("events", fetchEvents);
 
   if (isLoading) return <p>Loading...</p>;

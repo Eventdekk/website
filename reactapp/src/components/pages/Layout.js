@@ -5,6 +5,7 @@ import { Text, ClickableText } from "../utils/Text.js";
 import Logo from "../utils/Logo.js";
 import DarkModeToggleButton from "../utils/DarkModeToggleButton.js";
 import SearchBar from "../utils/SearchBar.js";
+import { HoverBox } from "../utils/Box.js";
 import { ProfilePicture } from "../utils/Profile.js";
 import { useUser } from "../site/UserContext.js";
 
@@ -83,19 +84,25 @@ export default function Layout() {
             <ul class="flex items-center">
               <li class="mr-10">
                 <Link to="/">
-                  <Logo>
-                    <Text style="font-beam text-lg">eventdekk</Text>
-                  </Logo>
+                  <div class="flex items-center">
+                    <Logo style="w-14 h-14 mr-2">
+                      <Text style="font-beam text-lg">eventdekk</Text>
+                    </Logo>
+                  </div>
                 </Link>
               </li>
-              <li class="mr-8 pb-1">
+              <li class="mr-4 pb-1">
                 <Link to="/calendar">
-                  <ClickableText>Calendar</ClickableText>
+                  <HoverBox style="p-1">
+                    <Text>Calendar</Text>
+                  </HoverBox>
                 </Link>
               </li>
               <li class="pb-1">
                 <Link to="/login">
-                  <ClickableText>Login</ClickableText>
+                  <HoverBox>
+                    <Text>{isLogged ? "Admin" : "Login"}</Text>
+                  </HoverBox>
                 </Link>
               </li>
               <li class="flex-grow"></li>

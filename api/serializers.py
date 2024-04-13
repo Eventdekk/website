@@ -18,15 +18,24 @@ class GroupMembersSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'group', 'user', 'role')
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
+    start_date = serializers.SerializerMethodField()
+    end_date = serializers.SerializerMethodField()
     class Meta:
         model = EventModel
-        fields = ('id', 'group', 'name', 'description', 'ifc_link', 'thumbnail', 'units')
+        fields = ('id', 'group', 'name', 'description', 'ifc_link', 'thumbnail', 'units', 'start_date', 'end_date')
+    
+    def get_start_date(self, instance):
+        first_unit = instance.units.first()
+        return first_unit.date if first_unit else None
+
+    def get_end_date(self, instance):
+        last_unit = instance.units.last()
+        return last_unit.date if last_unit else None
 
 class EventUnitSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EventUnitModel
         fields = ('id', 'event', 'type', 'name', 'date', 'flights')
-
 
 class EventFlightSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

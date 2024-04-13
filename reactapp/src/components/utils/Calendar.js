@@ -284,7 +284,7 @@ export function convertDatesToObjects(events) {
   return events.map((event) => {
     return {
       ...event,
-      date: new Date(event.date),
+      date: new Date(event.start_date),
     };
   });
 }

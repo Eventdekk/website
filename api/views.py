@@ -62,8 +62,6 @@ class GroupViewSet(viewsets.ModelViewSet):
             data = []
             for event in events:
                 event_data = EventSerializer(event, context={'request': request}).data
-                event_data['start_date'] = event.units.first().date
-                event_data['end_date'] = event.units.last().date
                 data.append(event_data)
             return Response(data)
         
