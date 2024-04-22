@@ -6,6 +6,7 @@ export async function fetchData(url) {
     headers: {
       Accept: "application/json",
     },
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -30,7 +31,7 @@ export async function fetchEvents() {
 
 export async function fetchUser(userId) {
   if (userId === null) {
-    return;
+    return null;
   }
 
   try {
@@ -49,7 +50,7 @@ export async function fetchUserGroups(userId) {
   try {
     return await fetchData("/users/groups/" + userId + "/");
   } catch (error) {
-    console.log("Error: " + error);
+    console.log(error);
     throw error;
   }
 }

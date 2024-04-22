@@ -33,7 +33,8 @@ export function AdminPage() {
   }
 
   if (error) {
-    return <Page></Page>;
+    console.log(error);
+    setLogged(false);
   }
 
   if (selectedGroup) {
@@ -45,6 +46,8 @@ export function AdminPage() {
       </Page>
     );
   }
+
+  console.log(data);
 
   return (
     <Page>

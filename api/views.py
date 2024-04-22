@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 
 from .serializers import *
 from .models import *
-from .auth import Discord, Authentication
+from .auth import Discord, Authentication, jwt_required
 from .cache import Cache
 
 import uuid
@@ -21,6 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = UserModel.objects.all()
 
     @action(detail=False, methods=['get'], url_path='data/(?P<uuid_str>[^/.]+)')
+    @jwt_required
     def get_user_data(self, request, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
@@ -37,7 +38,8 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "User not found"}, status=404)
 
     @action(detail=False, methods=['get'], url_path='groups/(?P<uuid_str>[^/.]+)')
-    def get_user_groups(self, request, uuid_str=None):
+    @jwt_required
+    def get_user_groups(self, request, authenticated_user=None, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
         except ValueError:
@@ -100,12 +102,12 @@ class EventFlightViewSet(viewsets.ModelViewSet):
     queryset = EventFlightModel.objects.all()
     
 class DiscordOAuthView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         return Authentication.authenticate()
 
 @method_decorator(csrf_exempt, name='dispatch')
 class DiscordCallbackView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         code = request.GET.get('code')
         if not code:
             return HttpResponseBadRequest('Authorization code missing')
@@ -123,6 +125,6 @@ class DiscordCallbackView(View):
         return Authentication.callback(discord_user_data['id'], access_token, refresh_token, expires_in)
     
 class ClearCache(View):
-    def get(self, request, *args, **kwards):
+    def get(self, request):
         Cache.clear()
         return Response({'status': 'success'})

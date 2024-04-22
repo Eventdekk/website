@@ -1,13 +1,12 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import AbstractUser
 
 from . import UserModelManager, GroupModelManager, EventModelManager
 
 class UserModel(models.Model):
     discord_id = models.IntegerField(unique=True)  
     uuid = models.CharField(max_length=32, default="0")
-    refresh_token = models.CharField(max_length=32, default="0")
+    discord_refresh_token = models.CharField(max_length=32, default="0")
 
     objects = UserModelManager()
 
@@ -20,7 +19,7 @@ class GroupModel(models.Model):
 
 class GroupMembersModel(models.Model):
     group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name="members", null=True)
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="groups", null=True)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="member_groups", null=True)
     role = models.SmallIntegerField()
 
 class EventModel(models.Model):

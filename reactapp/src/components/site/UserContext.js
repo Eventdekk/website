@@ -16,7 +16,7 @@ export function UserProvider({ children }) {
   const [selectedGroup, setSelectedGroup] = useState(null);
 
   const { data, isLoading, error } = useQuery(
-    userId ? ["user", userId] : null,
+    ["user", userId],
     () => fetchUser(userId),
     {
       enabled: userId !== null,
@@ -34,6 +34,7 @@ export function UserProvider({ children }) {
   };
 
   useEffect(() => {
+    console.log("empty");
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId !== null && storedUserId !== "") {
       loginUser(storedUserId);
@@ -41,13 +42,14 @@ export function UserProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    //Check if this is a valid UUID
+    console.log("userIdParam");
     if (userIdParam !== null) {
       loginUser(userIdParam);
     }
   }, [userIdParam]);
 
   useEffect(() => {
+    console.log("multo");
     if (!isLoading && data) {
       setDiscordId(data.discord_id);
       setAvatar(data.avatar);

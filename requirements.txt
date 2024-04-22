@@ -5,3 +5,4 @@ gunicorn
 python-dotenv
 django-oauth-toolkit
 django-cors-headers
+pyjwt
