@@ -158,7 +158,7 @@ def jwt_required(view_func):
         jwt_cookie = request.COOKIES.get('jwt')
         authenticated_user = Authentication.decode_jwt(jwt_cookie)
         if authenticated_user:
-            return view_func(request, authenticated_user, *args, **kwargs)
+            return view_func(self, request, authenticated_user, *args, **kwargs)
         return JsonResponse({'error': 'Unauthorized'}, status=401)
         
     return wrapper

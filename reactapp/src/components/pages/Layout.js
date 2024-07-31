@@ -78,7 +78,7 @@ export default function Layout() {
 
       {/* Navigation for desktop */}
       {/*<nav class="hidden md:flex justify-between p-2 bg-white dark:bg-midnight">*/}
-      <div class="sticky top-0 z-20 bg-white/80 dark:bg-midnight/80 backdrop-blur-lg">
+      <div class="sticky top-0 z-20 bg-white/80 dark:bg-midnight/80 backdrop-blur-lg border-b border-gray-600/30">
         <nav class="hidden md:flex justify-between p-2 w-full ">
           <div>
             <ul class="flex items-center">

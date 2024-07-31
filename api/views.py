@@ -5,7 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .serializers import *
 from .models import *
@@ -13,6 +14,7 @@ from .auth import Discord, Authentication, jwt_required
 from .cache import Cache
 
 import uuid
+import json
 
 from config import *
 
@@ -22,7 +24,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='data/(?P<uuid_str>[^/.]+)')
     @jwt_required
-    def get_user_data(self, request, uuid_str=None):
+    def get_user_data(self, request, authenticated_user=None, uuid_str=None):
         try:
             uuid.UUID(uuid_str)
         except ValueError:
@@ -77,21 +79,35 @@ class GroupMembersViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = EventModel.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
 
-    @action(detail=False, methods=['get'], url_path='details/(?P<event_id>\d+)')
-    def get_event_details(self, request, event_id=None):
+    @action(detail=False, methods=['post'], url_path='create')
+    @jwt_required
+    def create_event(self, request, authenticated_user=None):
         try:
-            event_units = EventModel.objects.get_event_details(event_id)
-            data = []
-            for unit in event_units:
-                unit_data = EventUnitSerializer(unit, context={'request': request}).data
-                flights_data = EventFlightSerializer(unit.flights.all(), many=True, context={'request': request}).data
-                unit_data['flights'] = flights_data
-                data.append(unit_data)
-            return Response(data)
-        
-        except EventModel.DoesNotExist:
-            return Response({"message": "Event not found"}, status=404)
+            data = request.data.get('data')
+            print(data)
+            if data:
+                try:
+                    data = json.loads(data)
+                except json.JSONDecodeError as e:
+                    print("JSON decode error:", str(e))
+                    return Response({"error": "Invalid JSON data"}, status=400)
+
+            if 'thumbnail' in request.FILES:
+                data['thumbnail'] = request.FILES['thumbnail']
+            else:
+                return Response({"error": "No thumbnail provided"}, status=400)
+
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Event created successfully"}, status=201)
+            else:
+                return Response({"error": "You must fill out all fields", "errors": serializer.errors}, status=400)
+        except Exception as e:
+            print("Unexpected error:", str(e))
+            return Response({"error": "An unexpected error occurred"}, status=500)
 
 class EventUnitViewSet(viewsets.ModelViewSet):
     serializer_class = EventUnitSerializer

@@ -5,7 +5,7 @@ import { Popup } from "./Popup.js";
 export function ProfilePicture({
   style,
   onClick,
-  src = "https://sea2.discourse-cdn.com/infiniteflight/user_avatar/community.infiniteflight.com/qatarivirtual/96/1210662_2.png",
+  src = "https://cdn.discordapp.com/icons/1073981884075352105/c6d918571a79ae8d11f43badbc11f88d.webp?size=160",
   isLoading,
 }) {
   if (isLoading) {

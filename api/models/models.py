@@ -34,8 +34,19 @@ class EventModel(models.Model):
 class EventUnitModel(models.Model):
     event = models.ForeignKey(EventModel, on_delete=models.CASCADE, related_name='units', null=True)
     type = models.SmallIntegerField()
-    name = models.TextField()
+    name = models.CharField(max_length=50)
     date = models.DateField(default=timezone.now().today)
+    departure = models.CharField(max_length=4, blank=True, null=True)
+    arrival = models.CharField(max_length=4, blank=True, null=True)
+
+    TYPE_CHOICES = [
+        (1, 'Group Flight'),
+        (2, 'Fly-in'),
+        (3, 'Fly-out'),
+    ]
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.name}"
 
 class EventFlightModel(models.Model):
     unit = models.ForeignKey(EventUnitModel, on_delete=models.CASCADE, related_name='flights', null=True)
@@ -44,5 +55,6 @@ class EventFlightModel(models.Model):
     departure_time = models.TimeField(default=timezone.now)
     arrival = models.CharField(max_length=4)
     arrival_time = models.TimeField(default=timezone.now)
-    est_pilots = models.SmallIntegerField()
-    act_pilots = models.SmallIntegerField()
+    est_pilots = models.SmallIntegerField(default=-1)
+    act_pilots = models.SmallIntegerField(default=-1)
+    pending = models.BooleanField(default=True)

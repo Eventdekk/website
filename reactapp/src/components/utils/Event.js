@@ -92,7 +92,7 @@ function eventPopup(data) {
   return (
     <div class="mb-1 flex items-center">
       <ProfilePicture style={"h-20 rounded-full"}></ProfilePicture>
-      <Text style="text-3xl p-4 font-semibold">Event</Text>
+      <Text style="text-3xl p-4 font-semibold">{data.name}</Text>
     </div>
   );
 }
