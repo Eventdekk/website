@@ -8,7 +8,17 @@ import {
   ClippedText,
 } from "./Text.js";
 
-export function CalendarShow({ children, style, month, day }) {
+export function CalendarShow({ children, style, dateObject }) {
+  if (!dateObject) {
+    dateObject = new Date();
+  }
+
+  const options = { month: "short", day: "numeric" };
+  const formatted = new Intl.DateTimeFormat("en-US", options).format(
+    dateObject
+  );
+
+  const [month, day] = formatted.split(" ");
   return (
     <div
       class={

@@ -25,7 +25,7 @@ class GroupMembersModel(models.Model):
 class EventModel(models.Model):
     group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name='events', null=True)
     name = models.CharField(max_length=50)
-    description = models.TextField()
+    description = models.TextField(null=True)
     ifc_link = models.URLField()
     thumbnail = models.ImageField()
 
@@ -50,7 +50,7 @@ class EventUnitModel(models.Model):
 
 class EventFlightModel(models.Model):
     unit = models.ForeignKey(EventUnitModel, on_delete=models.CASCADE, related_name='flights', null=True)
-    group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, related_name="joining_events", null=True)
+    group = models.ForeignKey(GroupModel, on_delete=models.CASCADE, null=True)
     departure = models.CharField(max_length=4)
     departure_time = models.TimeField(default=timezone.now)
     arrival = models.CharField(max_length=4)

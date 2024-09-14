@@ -11,3 +11,15 @@ export function HoverBox({ children, style, onClick }) {
     </div>
   );
 }
+
+export function LoadingBox({ children, style }) {
+  return (
+    <div
+      className={
+        style + " animate-pulse rounded-full bg-slate-200 dark:bg-midnight2"
+      }
+    >
+      {children}
+    </div>
+  );
+}

@@ -4,22 +4,15 @@ import { ProfilePicture } from "./Profile.js";
 import { CalendarShow } from "./Calendar.js";
 import Banner from "./Banner.js";
 import { Popup } from "./Popup.js";
-import { HoverBox } from "./Box.js";
+import { HoverBox, LoadingBox } from "./Box.js";
 import { usePopup } from "../site/PopupContext.js";
 
 //"https://images-ext-2.discordapp.net/external/A6xyp9sMfTBBCTSwsgbUa5dFDKu3cEmWMp_Tek68tE4/https/global.discourse-cdn.com/infiniteflight/optimized/4X/0/a/6/0a646d555e58ed792705ee22089c894854b812ab_2_1024x576.jpeg?format=webp&width=1014&height=570"
 
-export default function Event({ data }) {
+export function Event({ data }) {
   const { isPopupOpen, openPopup, closePopup, togglePopup } = usePopup();
 
   const dateObject = new Date(data.start_date);
-
-  const options = { month: "short", day: "numeric" };
-  const formatted = new Intl.DateTimeFormat("en-US", options).format(
-    dateObject
-  );
-
-  const [month, day] = formatted.split(" ");
 
   const toggleProfilePopup = (event) => {
     event.stopPropagation();
@@ -51,11 +44,12 @@ export default function Event({ data }) {
               <ProfilePicture
                 style="h-8"
                 onClick={toggleProfilePopup}
+                src={data.group.profile_link}
               ></ProfilePicture>
             </div>
             <div class="mb-1 flex items-center">
               <ClickableText onClick={toggleProfilePopup}>
-                Qatari Virtual
+                {data.group.name}
               </ClickableText>
             </div>
           </div>
@@ -69,9 +63,33 @@ export default function Event({ data }) {
 
             <CalendarShow
               style="absolute"
-              month={month}
-              day={day}
+              dateObject={dateObject}
             ></CalendarShow>
+          </div>
+        </HoverBox>
+      </div>
+    </>
+  );
+}
+
+export function LoadingEvent() {
+  return (
+    <>
+      <div class="p-3">
+        <HoverBox style="cursor-pointer rounded-xl">
+          <div class="flex">
+            <div class="mr-2">
+              <ProfilePicture style="h-8 w-8" isLoading={true}></ProfilePicture>
+            </div>
+            <div class="mb-1 flex items-center">
+              <LoadingBox style="h-4 w-32" />
+            </div>
+          </div>
+
+          <TruncatedText style="dark:text-slate-100 mb-2 text-lg font-semibold	"></TruncatedText>
+
+          <div class="relative">
+            <Banner isLoading={true}></Banner>
           </div>
         </HoverBox>
       </div>
@@ -82,8 +100,11 @@ export default function Event({ data }) {
 function profilePopup(data) {
   return (
     <div class="mb-1 flex items-center">
-      <ProfilePicture style={"h-20 rounded-full"}></ProfilePicture>
-      <Text style="text-3xl p-4 font-semibold">Qatari Virtual</Text>
+      <ProfilePicture
+        style={"h-20 rounded-full"}
+        src={data.group.profile_link}
+      ></ProfilePicture>
+      <Text style="text-3xl p-4 font-semibold">{data.group.name}</Text>
     </div>
   );
 }
@@ -91,7 +112,10 @@ function profilePopup(data) {
 function eventPopup(data) {
   return (
     <div class="mb-1 flex items-center">
-      <ProfilePicture style={"h-20 rounded-full"}></ProfilePicture>
+      <ProfilePicture
+        style={"h-20 rounded-full"}
+        src={data.group.profile_link}
+      ></ProfilePicture>
       <Text style="text-3xl p-4 font-semibold">{data.name}</Text>
     </div>
   );

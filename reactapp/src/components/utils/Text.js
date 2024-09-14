@@ -2,7 +2,7 @@ export function Text({ children, style, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={style + " text-black dark:text-slate-100"}
+      className={style + " text-black dark:text-slate-100 align-middle"}
     >
       {children}
     </div>
@@ -63,6 +63,20 @@ export function ClickableText({ children, style, onClick }) {
     <Text
       style={
         style + " hover:text-primary hover:dark:text-secondary duration-300"
+      }
+      onClick={onClick}
+    >
+      {children}
+    </Text>
+  );
+}
+
+export function ICAOText({ children, style, onClick }) {
+  return (
+    <Text
+      style={
+        style +
+        " px-1 text-xs font-semibold text-slate-600 dark:text-slate-300 rounded border border-solid border-slate-400 dark:border-slate-500"
       }
       onClick={onClick}
     >

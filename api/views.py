@@ -2,6 +2,7 @@ from django.http import HttpResponseBadRequest
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import OuterRef, Subquery, Min
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -81,12 +82,16 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = EventModel.objects.all()
     parser_classes = (MultiPartParser, FormParser)
 
+    def get_queryset(self):
+        start_date_subquery = EventUnitModel.objects.filter(event=OuterRef('pk')).order_by('date').values('date')[:1]
+        queryset = super().get_queryset().annotate(start_date=Subquery(start_date_subquery))
+        return queryset.order_by('start_date')
+
     @action(detail=False, methods=['post'], url_path='create')
     @jwt_required
     def create_event(self, request, authenticated_user=None):
         try:
             data = request.data.get('data')
-            print(data)
             if data:
                 try:
                     data = json.loads(data)

@@ -34,7 +34,6 @@ export function UserProvider({ children }) {
   };
 
   useEffect(() => {
-    console.log("empty");
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId !== null && storedUserId !== "") {
       loginUser(storedUserId);

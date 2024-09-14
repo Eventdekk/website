@@ -6,7 +6,8 @@ import { Text } from "../../utils/Text.js";
 import { postEvent } from "../../query/query.js";
 import { Button, InputField, Textarea } from "../../utils/Form.js";
 import { useUser } from "../../site/UserContext.js";
-import { Error } from "../../utils/Error.js";
+import { Error } from "../../utils/Notification.js";
+import { CloseButton } from "../../utils/Form.js";
 
 export function CreateEventPage() {
   const [name, setName] = useState("");
@@ -50,6 +51,10 @@ export function CreateEventPage() {
     );
   };
 
+  const removeUnit = (id) => {
+    setUnits((prevUnits) => prevUnits.filter((unit) => unit.id !== id));
+  };
+
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -64,66 +69,70 @@ export function CreateEventPage() {
     //TODO: Do some file checks here
     formData.append("thumbnail", fileInputRef.current.files[0]);
     var data = {
-      group: "http://localhost:8000/api/groups/1/",
+      group: selectedGroup.id,
       name: name,
       description: description,
       ifc_link: "https://chatgpt.com/c/b11710c0-b06a-4370-bec4-de74e0e8cb14",
       units: units,
     };
     formData.append("data", JSON.stringify(data));
+    console.log(data);
     mutation.mutate(formData);
   };
 
   return (
     <Page>
-      {mutation.isPending ? (
-        <Text>Creating your event...</Text>
-      ) : (
-        <>
-          {mutation.isError ? <Error>{mutation.error.message}</Error> : null}
+      {mutation.isError ? <Error>{mutation.error.message}</Error> : null}
 
-          {mutation.isSuccess ? <Text>Event Created!</Text> : null}
+      {mutation.isSuccess ? <Text>Event Created!</Text> : null}
 
-          <div class="p-5">
-            <Text style="font-medium text-2xl">Create Event</Text>
+      <div class="pb-2 px-3 flex justify-between items-center">
+        <Text style="font-medium text-2xl">Create Event</Text>
+        <Button onClick={onCreateEvent} type="submit" style="m-2">
+          Publish Event
+        </Button>
+      </div>
+      <div class="mx-4 grid grid-cols-3">
+        <form class="col-span-2">
+          <div class="p-1 rounded-lg bg-gray-100 dark:bg-midnight2">
+            <InputField
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Title"
+              style="text-lg font-semibold"
+            />
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Write a description..."
+              style="text-sm"
+            />
+            <InputField type="file" ref={fileInputRef} />
           </div>
-          <div class="mx-4 grid grid-cols-3">
-            <form
-              onSubmit={onCreateEvent}
-              class="col-span-2 rounded-lg dark:bg-midnight2"
-            >
-              <InputField
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Title"
-                style="text-lg font-semibold"
+
+          {units.map((unit) => (
+            <div class="mt-4 rounded-lg bg-gray-100 dark:bg-midnight2">
+              <UnitInput
+                key={unit.id}
+                unit={unit}
+                updateUnit={updateUnit}
+                removeUnit={removeUnit}
               />
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Write a description..."
-                style="text-sm"
-              />
-              <InputField type="file" ref={fileInputRef} />
-              {units.map((unit) => (
-                <Unit key={unit} unit={unit} updateUnit={updateUnit} />
-              ))}
-              <Button type="submit" style="m-2">
-                Create Event
-              </Button>
-            </form>
-            <div class="ml-4 px-3 rounded-lg bg-midnight2">
-              <Text style="py-3 text-lg font-semibold">Add Event Unit</Text>
-              <div className="flex flex-col space-y-2">
-                <Button onClick={() => addUnit(1)}>Add Group Flight</Button>
-                <Button onClick={() => addUnit(2)}>Add Fly-in</Button>
-                <Button onClick={() => addUnit(3)}>Add Fly-out</Button>
-              </div>
+            </div>
+          ))}
+        </form>
+        <div class="ml-4">
+          <div className="px-3 pb-4 rounded-lg bg-gray-100 dark:bg-midnight2">
+            <Text style="py-3 text-lg font-semibold">Add Event Unit</Text>
+            <div className="flex flex-col space-y-2">
+              <Button onClick={() => addUnit(1)}>Add Group Flight</Button>
+              <Button onClick={() => addUnit(2)}>Add Fly-in</Button>
+              <Button onClick={() => addUnit(3)}>Add Fly-out</Button>
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </Page>
   );
 }
@@ -134,7 +143,7 @@ const UNIT_TYPES = {
   3: "Fly-out",
 };
 
-export function Unit({ unit, updateUnit }) {
+export function UnitInput({ unit, updateUnit, removeUnit }) {
   const [unitData, setUnitData] = useState(unit);
 
   useEffect(() => {
@@ -153,8 +162,17 @@ export function Unit({ unit, updateUnit }) {
   };
 
   return (
-    <>
-      <Text>{UNIT_TYPES[unitData.type]}</Text>
+    <div class="p-2">
+      <div class="flex justify-between items-center">
+        <Text style="px-1 font-semibold text-lg">
+          {UNIT_TYPES[unitData.type]}
+        </Text>
+        <CloseButton
+          style="pr-3 pt-2"
+          onClick={() => removeUnit(unitData.id)}
+        />
+      </div>
+
       <InputField
         type="text"
         name="name"
@@ -213,6 +231,6 @@ export function Unit({ unit, updateUnit }) {
           />
         </>
       )}
-    </>
+    </div>
   );
 }

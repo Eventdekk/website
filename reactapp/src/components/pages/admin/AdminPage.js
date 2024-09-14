@@ -47,7 +47,10 @@ export function AdminPage() {
     );
   }
 
-  console.log(data);
+  //No selection if only one group
+  if (data.length == 1 && !selectedGroup) {
+    handleGroupSelection(data[0]);
+  }
 
   return (
     <Page>
@@ -64,7 +67,7 @@ export function AdminPage() {
             >
               <ProfilePicture
                 key={index}
-                style="m-2 h-20 rounded-xl"
+                style="m-2 h-20 w-20 rounded-xl"
                 src={group.profile_link}
               ></ProfilePicture>
               <Title style="font-bold m-2">{group.name}</Title>
@@ -125,21 +128,40 @@ export function UpcomingEvent({ data, isLoading, error }) {
     );
   }
 
-  if (data.length == 0) {
-    return (
-      <div class="my-2 flex items-center rounded-xl p-2 bg-slate-100 dark:bg-midnight2">
-        <SecondaryText>No upcoming events</SecondaryText>
-        <Link to="/admin/create">
-          <ClickableText style="px-2 text-xl">Create an event</ClickableText>
-        </Link>
-      </div>
+  const getNextUpcomingEvent = (events) => {
+    const currentDate = new Date();
+
+    const upcomingEvents = events.filter(
+      (event) => new Date(event.start_date) >= currentDate
     );
-  }
+
+    upcomingEvents.sort(
+      (a, b) => new Date(a.start_date) - new Date(b.start_date)
+    );
+
+    //Check why this runs 10 times on rerender
+    console.log(upcomingEvents);
+
+    return upcomingEvents[0];
+  };
+
+  const nextEvent = getNextUpcomingEvent(data);
 
   return (
     <div class="my-2 flex items-center rounded-xl p-2 bg-slate-100 dark:bg-midnight2">
-      <SecondaryText>Upcoming event:</SecondaryText>
-      <Text style="px-2 text-xl">{data[0].name}</Text>
+      {nextEvent ? (
+        <>
+          <SecondaryText>Upcoming event:</SecondaryText>
+          <Text style="px-2 text-xl">{nextEvent.name}</Text>
+        </>
+      ) : (
+        <>
+          <SecondaryText>No upcoming events</SecondaryText>
+          <Link to="/admin/create">
+            <ClickableText style="px-2 text-xl">Create an event</ClickableText>
+          </Link>
+        </>
+      )}
     </div>
   );
 }

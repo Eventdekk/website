@@ -18,6 +18,11 @@ import { UserProvider } from "./components/site/UserContext.js";
 import { useUser } from "./components/site/UserContext.js";
 import { AdminNavbar } from "./components/admin/AdminNavbar.js";
 import { CreateEventPage } from "./components/pages/admin/CreateEventPage.js";
+import {
+  ManageEventsPage,
+  ManageEventPage,
+} from "./components/pages/admin/ManageEventPage.js";
+import { IconContext } from "react-icons";
 
 function App() {
   const router = createBrowserRouter([
@@ -57,6 +62,14 @@ function App() {
               path: "create",
               element: <CreateEventPage />,
             },
+            {
+              path: "manage",
+              element: <ManageEventsPage />,
+            },
+            {
+              path: "manage/:id",
+              element: <ManageEventPage />,
+            },
           ],
         },
         {
@@ -67,11 +80,18 @@ function App() {
     },
   ]);
   return (
-    <PopupProvider>
-      <ThemeProvider>
-        <RouterProvider router={router}></RouterProvider>
-      </ThemeProvider>
-    </PopupProvider>
+    <IconContext.Provider
+      value={{
+        className: "text-slate-600 dark:text-slate-300",
+        style: { verticalAlign: "middle" },
+      }}
+    >
+      <PopupProvider>
+        <ThemeProvider>
+          <RouterProvider router={router}></RouterProvider>
+        </ThemeProvider>
+      </PopupProvider>
+    </IconContext.Provider>
   );
 }
 function PrivateRoute({ children }) {
